@@ -277,7 +277,30 @@ a:hover { text-decoration: underline; }
   color: var(--muted);
 }
 .nav-close {
-  /* same as ghost-btn sizing */
+  /* inherits .icon-btn */
+}
+.dismiss-icon {
+  position: relative;
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+.dismiss-icon::before,
+.dismiss-icon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+}
+.dismiss-icon::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.dismiss-icon::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
 }
 .toc { display: flex; flex-direction: column; gap: 0.2rem; }
 .toc-link {
