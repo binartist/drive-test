@@ -89,12 +89,37 @@ a:hover { text-decoration: underline; }
   gap: 0.55rem;
   min-height: var(--topbar-h);
 }
-.drawer-btn {
+.icon-btn {
   flex-shrink: 0;
   width: var(--tap);
   min-width: var(--tap);
+  min-height: var(--tap);
   padding: 0;
+  margin: 0;
+  border: 0;
   border-radius: 12px;
+  background: transparent;
+  color: var(--ink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font: inherit;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  box-shadow: none;
+}
+.icon-btn:hover {
+  background: transparent;
+  color: var(--accent);
+}
+.icon-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.drawer-btn {
+  flex-shrink: 0;
 }
 .drawer-icon {
   display: flex;
@@ -318,27 +343,24 @@ a:hover { text-decoration: underline; }
 }
 .toc-popover-wrap[hidden] { display: none !important; }
 .toc-icon-btn {
-  width: var(--tap);
-  min-width: var(--tap);
-  padding: 0;
-  border-radius: 12px;
+  /* inherits .icon-btn */
 }
-.toc-icon {
+.dots-icon {
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: center;
   gap: 4px;
   width: 18px;
+  height: 18px;
 }
-.toc-icon span {
+.dots-icon span {
   display: block;
-  height: 2px;
-  width: 100%;
-  border-radius: 2px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
   background: currentColor;
 }
-.toc-icon span:nth-child(2) { width: 75%; }
-.toc-icon span:nth-child(3) { width: 90%; }
 .toc-popover {
   position: absolute;
   top: calc(100% + 0.45rem);
@@ -812,7 +834,7 @@ h4 { margin: 0 0 0.4rem; font-size: 1rem; }
 }
 
 @media print {
-  .topbar, .sidebar, .toc-popover, .hero-actions, .video-frame, .ghost-btn, .backdrop { display: none !important; }
+  .topbar, .sidebar, .toc-popover, .hero-actions, .video-frame, .ghost-btn, .icon-btn, .backdrop { display: none !important; }
   .shell { display: block; }
   .screen, .screen[hidden] { display: block !important; }
   .chapter { break-inside: avoid; }
