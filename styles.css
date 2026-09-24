@@ -368,21 +368,11 @@ a:hover { text-decoration: underline; }
 .toc-icon-btn {
   /* inherits .icon-btn */
 }
-.dots-icon {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  width: 18px;
-  height: 18px;
-}
-.dots-icon span {
+.toc-list-icon {
   display: block;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: currentColor;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
 }
 .toc-popover {
   position: absolute;
