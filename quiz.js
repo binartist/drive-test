@@ -262,7 +262,7 @@
     });
   }
 
-  function persistResultfunction persistResult(score, total, perQuestion) {
+  function persistResult(score, total, perQuestion) {
     const payload = {
       score,
       total,
