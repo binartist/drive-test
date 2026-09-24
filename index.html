@@ -7,7 +7,7 @@
   <meta name="description" content="A calm, image-rich guide to driving, parking, and filling petrol in New Zealand." />
   <meta name="theme-color" content="#0f6e56" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <link rel="stylesheet" href="styles.css?v=20260925c" />
+  <link rel="stylesheet" href="styles.css?v=20260925d" />
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -26,10 +26,6 @@
           <h1 class="brand-title">Driving Guide</h1>
         </div>
       </div>
-      <div class="topbar-actions">
-        <button type="button" class="ghost-btn" id="themeToggle" aria-label="Toggle dark mode">Theme</button>
-        <button type="button" class="ghost-btn quiz-open-btn" id="quizOpenTop" data-quiz-open aria-haspopup="dialog" aria-controls="quizSession">Quiz</button>
-      </div>
     </div>
     <div class="progress" aria-hidden="true"><div class="progress-bar" id="progressBar"></div></div>
   </header>
@@ -40,7 +36,7 @@
         <p class="sidebar-label">Chapters</p>
         <button type="button" class="ghost-btn nav-close" id="navClose" aria-label="Close menu">Close</button>
       </div>
-      <nav class="toc">
+      <nav class="toc" aria-label="Guide sections">
         <a href="#start" class="toc-link" data-section="start">Start here</a>
         <a href="#drive" class="toc-link" data-section="drive">1. Drive on the left</a>
         <a href="#roundabouts" class="toc-link" data-section="roundabouts">2. Roundabouts</a>
@@ -51,8 +47,12 @@
         <a href="#tips" class="toc-link" data-section="tips">Practical tips</a>
         <a href="#playlist" class="toc-link" data-section="playlist">Video playlist</a>
         <a href="#checklist" class="toc-link" data-section="checklist">Trip checklist</a>
-        <button type="button" class="toc-link toc-action" data-quiz-open aria-haspopup="dialog" aria-controls="quizSession">Knowledge check</button>
       </nav>
+      <div class="sidebar-tools" aria-label="App">
+        <p class="sidebar-tools-label">App</p>
+        <button type="button" class="toc-link toc-action" data-quiz-open aria-haspopup="dialog" aria-controls="quizSession">Knowledge check</button>
+        <button type="button" class="toc-link toc-action" id="themeToggle" aria-label="Toggle dark mode">Theme</button>
+      </div>
       <div class="sidebar-card">
         <p class="sidebar-card-title">Watch first</p>
         <p class="sidebar-card-text">10 minutes with NZ Police before you pick up the keys.</p>
@@ -69,7 +69,6 @@
         <p class="lede">A reading-friendly guide for your first week on North Island roads. Short chapters, real NZ photos, clear diagrams, and curated videos.</p>
         <div class="hero-actions">
           <a class="primary-btn" href="#drive">Start chapter 1</a>
-          <button type="button" class="secondary-btn" data-quiz-open aria-haspopup="dialog" aria-controls="quizSession">Knowledge check</button>
         </div>
         <ul class="stat-row">
           <li><strong>6</strong><span>chapters</span></li>
@@ -825,7 +824,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260925c"></script>
-  <script src="quiz.js?v=20260925c"></script>
+  <script src="app.js?v=20260925d"></script>
+  <script src="quiz.js?v=20260925d"></script>
 </body>
 </html>
