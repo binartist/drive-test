@@ -8,11 +8,9 @@
   const progressWrap = document.querySelector(".progress");
   const screens = [...document.querySelectorAll(".screen[data-screen]")];
   const screenLinks = [...document.querySelectorAll(".toc-link[data-screen]")];
-  const SCREENS = ["guide", "tips", "playlist", "checklist", "quiz", "settings"];
+  const SCREENS = ["guide", "checklist", "quiz", "settings"];
   const SCREEN_TITLES = {
     guide: "Guide",
-    tips: "Tips",
-    playlist: "Playlist",
     checklist: "Checklist",
     quiz: "Knowledge check",
     settings: "Settings",
@@ -221,7 +219,7 @@
   });
 
   // Progress bar — guide screen only
-  const guideChapters = ["start", "drive", "roundabouts", "give-way", "signs", "parking", "petrol"]
+  const guideChapters = ["start", "drive", "roundabouts", "give-way", "signs", "parking", "petrol", "tips", "playlist"]
     .map((id) => document.getElementById(id))
     .filter(Boolean);
 
