@@ -1208,3 +1208,7 @@ body.quiz-welcome-open { overflow: hidden; }
     grid-template-columns: repeat(3, 1fr);
   }
 }
+
+.parking-sign-grid {
+  margin: 1rem 0 1.25rem;
+}
