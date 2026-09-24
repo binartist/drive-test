@@ -124,6 +124,27 @@
       explain: "Look for the priority or give-way arrow sign. One direction has priority; the other must wait. Enter only when the bridge is clear for you.",
       image: { src: "assets/photo-one-lane-bridge.jpg", alt: "Single-lane bridge in New Zealand" },
     },
+    {
+      id: "p60",
+      type: "mc",
+      prompt: "A blue sign showing “P” and “60” usually means:",
+      options: [
+        "Parking is free for 60 hours",
+        "You may park for up to 60 minutes (check the time panel)",
+        "Only buses may stop for 60 seconds",
+        "No parking after 6:00"
+      ],
+      correct: 1,
+      explain: "Blue P with a number is a time limit in minutes. Always read any hours panel under the sign as well.",
+      sign: "p60"
+    },
+    {
+      id: "clearway",
+      type: "yn",
+      prompt: "During clearway hours you may briefly stop to drop off a passenger.",
+      correct: false,
+      explain: "No. Clearway means no stopping during the posted times — not even for a quick drop-off. Find another bay."
+    },
   ];
 
   const els = {
@@ -178,6 +199,13 @@
       return `<svg viewBox="0 0 80 80" width="72" height="72" role="img" aria-label="50 km/h speed limit sign">
         <circle cx="40" cy="40" r="30" fill="#fff" stroke="#c8102e" stroke-width="5"/>
         <text x="40" y="46" text-anchor="middle" font-size="22" font-weight="700" fill="#1c2430" font-family="system-ui,sans-serif">50</text>
+      </svg>`;
+    }
+    if (kind === "p60") {
+      return `<svg viewBox="0 0 80 80" width="72" height="72" role="img" aria-label="P60 parking sign">
+        <rect x="18" y="10" width="44" height="60" rx="4" fill="#0b5cab"/>
+        <text x="40" y="36" text-anchor="middle" font-size="22" font-weight="800" fill="#fff" font-family="system-ui,sans-serif">P</text>
+        <text x="40" y="56" text-anchor="middle" font-size="14" font-weight="700" fill="#fff" font-family="system-ui,sans-serif">60</text>
       </svg>`;
     }
     return "";
