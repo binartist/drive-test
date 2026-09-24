@@ -934,3 +934,62 @@ h4 { margin: 0 0 0.4rem; font-size: 1rem; }
 @media print {
   .quiz-shell { box-shadow: none; }
 }
+
+/* First-visit quiz prompt */
+.quiz-welcome {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1.25rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+  background: rgba(18, 22, 28, 0.55);
+  backdrop-filter: blur(6px);
+}
+.quiz-welcome[hidden] { display: none !important; }
+body.quiz-welcome-open { overflow: hidden; }
+.quiz-welcome-card {
+  width: min(100%, 420px);
+  background: var(--bg-elev);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 1.35rem 1.2rem 1.25rem;
+  box-shadow: var(--shadow);
+}
+.quiz-welcome-card h2 {
+  margin: 0 0 0.65rem;
+  font-family: var(--serif);
+  font-size: clamp(1.35rem, 5vw, 1.65rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+.quiz-welcome-text {
+  margin: 0 0 1.15rem;
+  color: var(--muted);
+  font-size: 0.98rem;
+}
+.quiz-welcome-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+.quiz-welcome-actions .primary-btn,
+.quiz-welcome-actions .secondary-btn {
+  width: 100%;
+}
+@media (min-width: 480px) {
+  .quiz-welcome {
+    align-items: center;
+  }
+  .quiz-welcome-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .quiz-welcome-actions .primary-btn,
+  .quiz-welcome-actions .secondary-btn {
+    width: auto;
+    flex: 1;
+  }
+}

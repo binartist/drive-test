@@ -4,6 +4,7 @@
     last: STORAGE_PREFIX + "last",
     best: STORAGE_PREFIX + "best",
     attempts: STORAGE_PREFIX + "attempts",
+    welcomed: STORAGE_PREFIX + "welcomed",
   };
 
   /** @type {Array<{
@@ -142,6 +143,9 @@
     scoreMsg: document.getElementById("quizScoreMsg"),
     review: document.getElementById("quizReview"),
     retake: document.getElementById("quizRetake"),
+    welcome: document.getElementById("quizWelcome"),
+    welcomeStart: document.getElementById("quizWelcomeStart"),
+    welcomeSkip: document.getElementById("quizWelcomeSkip"),
   };
 
   if (!els.start || !els.active) return;
@@ -398,9 +402,55 @@
     els.results?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
+
+  function markWelcomed() {
+    localStorage.setItem(KEYS.welcomed, "1");
+  }
+
+  function hideWelcome() {
+    if (!els.welcome) return;
+    els.welcome.hidden = true;
+    document.body.classList.remove("quiz-welcome-open");
+  }
+
+  function showWelcomePrompt() {
+    if (!els.welcome) return;
+    if (localStorage.getItem(KEYS.welcomed) === "1") return;
+    // Returning visitors who already finished a quiz: don't interrupt
+    if (Number(localStorage.getItem(KEYS.attempts) || "0") > 0) {
+      markWelcomed();
+      return;
+    }
+    els.welcome.hidden = false;
+    document.body.classList.add("quiz-welcome-open");
+    els.welcomeStart?.focus();
+  }
+
+  function beginFromWelcome() {
+    markWelcomed();
+    hideWelcome();
+    const section = document.getElementById("quiz");
+    section?.scrollIntoView({ behavior: "smooth", block: "start" });
+    startQuiz();
+  }
+
+  function skipWelcome() {
+    markWelcomed();
+    hideWelcome();
+  }
+
   els.start.addEventListener("click", startQuiz);
   els.next.addEventListener("click", goNext);
   els.retake.addEventListener("click", startQuiz);
+  els.welcomeStart?.addEventListener("click", beginFromWelcome);
+  els.welcomeSkip?.addEventListener("click", skipWelcome);
+  els.welcome?.addEventListener("click", (e) => {
+    if (e.target === els.welcome) skipWelcome();
+  });
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && els.welcome && !els.welcome.hidden) skipWelcome();
+  });
 
   showLastSummary();
+  showWelcomePrompt();
 })();
