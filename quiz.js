@@ -144,8 +144,11 @@
     review: document.getElementById("quizReview"),
     retake: document.getElementById("quizRetake"),
     welcome: document.getElementById("quizWelcome"),
+    welcomeDialog: document.querySelector("#quizWelcome .quiz-modal-dialog"),
+    welcomeBackdrop: document.getElementById("quizWelcomeBackdrop"),
     welcomeStart: document.getElementById("quizWelcomeStart"),
     welcomeSkip: document.getElementById("quizWelcomeSkip"),
+    welcomeClose: document.getElementById("quizWelcomeClose"),
   };
 
   if (!els.start || !els.active) return;
@@ -403,27 +406,65 @@
   }
 
 
+  let welcomeLastFocus = null;
+
   function markWelcomed() {
     localStorage.setItem(KEYS.welcomed, "1");
   }
 
+  function getWelcomeFocusables() {
+    if (!els.welcomeDialog) return [];
+    return [...els.welcomeDialog.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    )].filter((el) => !el.disabled && el.offsetParent !== null);
+  }
+
   function hideWelcome() {
-    if (!els.welcome) return;
+    if (!els.welcome || els.welcome.hidden) return;
     els.welcome.hidden = true;
     document.body.classList.remove("quiz-welcome-open");
+    document.removeEventListener("keydown", onWelcomeKeydown, true);
+    if (welcomeLastFocus && typeof welcomeLastFocus.focus === "function") {
+      welcomeLastFocus.focus();
+    }
+  }
+
+  function onWelcomeKeydown(e) {
+    if (!els.welcome || els.welcome.hidden) return;
+    if (e.key === "Escape") {
+      e.preventDefault();
+      skipWelcome();
+      return;
+    }
+    if (e.key !== "Tab") return;
+    const focusables = getWelcomeFocusables();
+    if (focusables.length === 0) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
   }
 
   function showWelcomePrompt() {
     if (!els.welcome) return;
     if (localStorage.getItem(KEYS.welcomed) === "1") return;
-    // Returning visitors who already finished a quiz: don't interrupt
     if (Number(localStorage.getItem(KEYS.attempts) || "0") > 0) {
       markWelcomed();
       return;
     }
+    welcomeLastFocus = document.activeElement;
     els.welcome.hidden = false;
     document.body.classList.add("quiz-welcome-open");
-    els.welcomeStart?.focus();
+    document.addEventListener("keydown", onWelcomeKeydown, true);
+    // Focus primary action inside the dialog
+    requestAnimationFrame(() => {
+      (els.welcomeStart || els.welcomeDialog)?.focus();
+    });
   }
 
   function beginFromWelcome() {
@@ -444,12 +485,8 @@
   els.retake.addEventListener("click", startQuiz);
   els.welcomeStart?.addEventListener("click", beginFromWelcome);
   els.welcomeSkip?.addEventListener("click", skipWelcome);
-  els.welcome?.addEventListener("click", (e) => {
-    if (e.target === els.welcome) skipWelcome();
-  });
-  window.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && els.welcome && !els.welcome.hidden) skipWelcome();
-  });
+  els.welcomeClose?.addEventListener("click", skipWelcome);
+  els.welcomeBackdrop?.addEventListener("click", skipWelcome);
 
   showLastSummary();
   showWelcomePrompt();

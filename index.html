@@ -661,11 +661,19 @@
   </div>
 
   
-  <div class="quiz-welcome" id="quizWelcome" hidden role="dialog" aria-modal="true" aria-labelledby="quizWelcomeTitle">
-    <div class="quiz-welcome-card">
+  <div class="quiz-modal" id="quizWelcome" hidden>
+    <div class="quiz-modal-backdrop" id="quizWelcomeBackdrop" tabindex="-1"></div>
+    <div
+      class="quiz-modal-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="quizWelcomeTitle"
+      aria-describedby="quizWelcomeDesc"
+    >
+      <button type="button" class="quiz-modal-close ghost-btn" id="quizWelcomeClose" aria-label="Close">×</button>
       <p class="eyebrow">Quick start</p>
       <h2 id="quizWelcomeTitle">Begin with a short knowledge check?</h2>
-      <p class="quiz-welcome-text">Twelve questions on left-side driving, roundabouts, signs, parking, and petrol. Takes a few minutes — results stay in this browser only.</p>
+      <p class="quiz-welcome-text" id="quizWelcomeDesc">Twelve questions on left-side driving, roundabouts, signs, parking, and petrol. Takes a few minutes — results stay in this browser only.</p>
       <div class="quiz-welcome-actions">
         <button type="button" class="primary-btn" id="quizWelcomeStart">Start quiz</button>
         <button type="button" class="secondary-btn" id="quizWelcomeSkip">Browse the guide first</button>

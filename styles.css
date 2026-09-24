@@ -935,54 +935,88 @@ h4 { margin: 0 0 0.4rem; font-size: 1rem; }
   .quiz-shell { box-shadow: none; }
 }
 
-/* First-visit quiz prompt */
-.quiz-welcome {
+/* First-visit quiz modal */
+.quiz-modal {
   position: fixed;
   inset: 0;
-  z-index: 80;
+  z-index: 100;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
-  padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1.25rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
-  background: rgba(18, 22, 28, 0.55);
-  backdrop-filter: blur(6px);
+  padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
 }
-.quiz-welcome[hidden] { display: none !important; }
+.quiz-modal[hidden] { display: none !important; }
 body.quiz-welcome-open { overflow: hidden; }
-.quiz-welcome-card {
-  width: min(100%, 420px);
+
+.quiz-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(18, 22, 28, 0.58);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.quiz-modal-dialog {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 440px);
+  max-height: min(90vh, 640px);
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
   background: var(--bg-elev);
   color: var(--ink);
   border: 1px solid var(--line);
   border-radius: 22px;
-  padding: 1.35rem 1.2rem 1.25rem;
-  box-shadow: var(--shadow);
+  padding: 1.5rem 1.25rem 1.35rem;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.28);
+  outline: none;
 }
-.quiz-welcome-card h2 {
+
+.quiz-modal-close {
+  position: absolute;
+  top: 0.65rem;
+  right: 0.65rem;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  font-size: 1.5rem;
+  line-height: 1;
+  border-radius: 50%;
+}
+
+.quiz-modal-dialog .eyebrow {
+  margin-right: 2.5rem;
+}
+
+.quiz-modal-dialog h2 {
   margin: 0 0 0.65rem;
   font-family: var(--serif);
-  font-size: clamp(1.35rem, 5vw, 1.65rem);
+  font-size: clamp(1.35rem, 5vw, 1.7rem);
   line-height: 1.2;
   letter-spacing: -0.02em;
+  padding-right: 1.5rem;
 }
+
 .quiz-welcome-text {
-  margin: 0 0 1.15rem;
+  margin: 0 0 1.2rem;
   color: var(--muted);
   font-size: 0.98rem;
 }
+
 .quiz-welcome-actions {
   display: flex;
   flex-direction: column;
   gap: 0.55rem;
 }
+
 .quiz-welcome-actions .primary-btn,
 .quiz-welcome-actions .secondary-btn {
   width: 100%;
 }
+
 @media (min-width: 480px) {
-  .quiz-welcome {
-    align-items: center;
-  }
   .quiz-welcome-actions {
     flex-direction: row;
     flex-wrap: wrap;
