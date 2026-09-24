@@ -7,7 +7,7 @@
   <meta name="description" content="A calm, image-rich guide to driving, parking, and filling petrol in New Zealand." />
   <meta name="theme-color" content="#0f6e56" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <link rel="stylesheet" href="styles.css?v=20260925e" />
+  <link rel="stylesheet" href="styles.css?v=20260925f" />
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -41,11 +41,11 @@
         <a href="#/tips" class="toc-link" data-screen="tips">Tips</a>
         <a href="#/playlist" class="toc-link" data-screen="playlist">Playlist</a>
         <a href="#/checklist" class="toc-link" data-screen="checklist">Checklist</a>
+        <a href="#/settings" class="toc-link" data-screen="settings">Settings</a>
       </nav>
       <div class="sidebar-tools" aria-label="App">
         <p class="sidebar-tools-label">App</p>
         <button type="button" class="toc-link toc-action" data-quiz-open aria-haspopup="dialog" aria-controls="quizSession">Knowledge check</button>
-        <button type="button" class="toc-link toc-action" id="themeToggle" aria-label="Toggle dark mode">Theme</button>
       </div>
       <div class="sidebar-card">
         <p class="sidebar-card-title">Watch first</p>
@@ -756,6 +756,30 @@
         <a href="#/guide" data-screen="guide">Back to top</a>
       </footer>
       </div>
+
+      <div class="screen" id="screen-settings" data-screen="settings" hidden>
+        <section class="chapter settings-panel" id="settings">
+          <header class="chapter-head">
+            <p class="chapter-num">App</p>
+            <h2>Settings</h2>
+            <p class="chapter-summary">Preferences for this device. Nothing is sent to a server.</p>
+          </header>
+
+          <div class="settings-list">
+            <div class="settings-row">
+              <div class="settings-row-text">
+                <p class="settings-row-title">Appearance</p>
+                <p class="settings-row-desc" id="themeStatus">Light mode</p>
+              </div>
+              <button type="button" class="settings-toggle" id="themeToggle" role="switch" aria-checked="false" aria-label="Use dark mode">
+                <span class="settings-toggle-track" aria-hidden="true"><span class="settings-toggle-thumb"></span></span>
+                <span class="settings-toggle-label">Dark</span>
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+
 </main>
   </div>
 
@@ -840,7 +864,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260925e"></script>
-  <script src="quiz.js?v=20260925e"></script>
+  <script src="app.js?v=20260925f"></script>
+  <script src="quiz.js?v=20260925f"></script>
 </body>
 </html>

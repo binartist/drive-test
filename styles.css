@@ -1477,3 +1477,83 @@ body.quiz-welcome-open { overflow: hidden; }
 .parking-sign-grid {
   margin: 1rem 0 1.25rem;
 }
+
+
+/* —— Settings screen —— */
+.settings-panel {
+  max-width: var(--max);
+}
+.settings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin: 0.5rem 0 2rem;
+}
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.05rem;
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+}
+.settings-row-title {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1rem;
+}
+.settings-row-desc {
+  margin: 0.2rem 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.settings-toggle {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 650;
+  cursor: pointer;
+  min-height: var(--tap);
+  padding: 0;
+}
+.settings-toggle-track {
+  width: 48px;
+  height: 28px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--muted) 35%, var(--line));
+  border: 1px solid var(--line);
+  position: relative;
+  transition: background 0.18s ease;
+}
+.settings-toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--bg-elev);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.18s ease;
+}
+.settings-toggle.is-on .settings-toggle-track {
+  background: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 70%, black);
+}
+.settings-toggle.is-on .settings-toggle-thumb {
+  transform: translateX(20px);
+}
+.settings-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 8px;
+}

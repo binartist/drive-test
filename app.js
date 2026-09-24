@@ -8,17 +8,28 @@
   const progressWrap = document.querySelector(".progress");
   const screens = [...document.querySelectorAll(".screen[data-screen]")];
   const screenLinks = [...document.querySelectorAll(".toc-link[data-screen]")];
-  const SCREENS = ["guide", "tips", "playlist", "checklist"];
+  const SCREENS = ["guide", "tips", "playlist", "checklist", "settings"];
   let currentScreen = "guide";
 
-  // Theme
+  // Theme (Settings screen)
+  const themeStatus = document.getElementById("themeStatus");
+  function syncThemeUi() {
+    const dark = root.getAttribute("data-theme") === "dark";
+    if (themeToggle) {
+      themeToggle.setAttribute("aria-checked", dark ? "true" : "false");
+      themeToggle.classList.toggle("is-on", dark);
+    }
+    if (themeStatus) themeStatus.textContent = dark ? "Dark mode" : "Light mode";
+  }
   const savedTheme = localStorage.getItem("nz-guide-theme");
   if (savedTheme) root.setAttribute("data-theme", savedTheme);
+  syncThemeUi();
   themeToggle?.addEventListener("click", () => {
     const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
     if (next === "light") root.removeAttribute("data-theme");
     else root.setAttribute("data-theme", "dark");
     localStorage.setItem("nz-guide-theme", next === "light" ? "" : "dark");
+    syncThemeUi();
   });
 
   // Mobile nav
