@@ -289,18 +289,40 @@
         view === "active" ? "Question time" :
         "Practice quiz";
     }
+    syncQuizChrome(view);
+  }
+
+  function syncQuizChrome(view) {
+    const nested = view === "active" || view === "results";
+    document.dispatchEvent(
+      new CustomEvent("nz-set-nested", {
+        detail: {
+          on: nested,
+          title: view === "results" ? "Your result" : view === "active" ? "Knowledge check" : null,
+        },
+      })
+    );
   }
 
   function isMidQuiz() {
     return els.active && !els.active.hidden;
   }
 
-  function resetToIntro() {
+  function isResultsView() {
+    return els.results && !els.results.hidden;
+  }
+
+  function resetToIntro({ updateHash = true } = {}) {
     index = 0;
     answers = [];
     answeredThis = false;
     setView("intro");
     showLastSummary();
+    if (updateHash && currentRoute() === "quiz" && quizSub() !== "") {
+      ignoringHash = true;
+      history.replaceState(null, "", "#/quiz");
+      requestAnimationFrame(() => { ignoringHash = false; });
+    }
   }
 
   function scrollQuizTop(smooth) {
@@ -313,11 +335,26 @@
     return (route.split(/[/?#]/)[0] || "").toLowerCase();
   }
 
+  /** Subpath under #/quiz — "" hub, "session" questions, "results" score. */
+  function quizSub() {
+    const raw = (location.hash || "").replace(/^#/, "");
+    const route = raw.startsWith("/") ? raw.slice(1) : raw;
+    const parts = route.split(/[/?#]/).filter(Boolean);
+    if ((parts[0] || "").toLowerCase() !== "quiz") return null;
+    return (parts[1] || "").toLowerCase();
+  }
+
+  function goQuizHash(sub, { replace = false } = {}) {
+    const hash = sub ? "#/quiz/" + sub : "#/quiz";
+    if (location.hash === hash) return;
+    if (replace) history.replaceState(null, "", hash);
+    else location.hash = hash;
+  }
+
   /** Navigate to the quiz screen (hash routing via app.js). */
   function openQuizHub() {
     if (currentRoute() === "quiz") {
-      setView("intro");
-      showLastSummary();
+      resetToIntro({ updateHash: true });
       scrollQuizTop(false);
       requestAnimationFrame(() => els.start?.focus());
       return;
@@ -327,7 +364,8 @@
 
   /** Leave quiz → guide and reset intro. */
   function closeSession() {
-    resetToIntro();
+    resetToIntro({ updateHash: false });
+    syncQuizChrome("intro");
     if (currentRoute() !== "guide") {
       location.hash = "#/guide";
     }
@@ -337,15 +375,58 @@
     index = 0;
     answers = QUESTIONS.map(() => ({ selected: null, correct: null }));
     answeredThis = false;
-    if (currentRoute() !== "quiz") {
-      location.hash = "#/quiz";
-    }
     setView("active");
     renderQuestion();
+    // Push session onto hub so Back / history can pop to intro.
+    if (currentRoute() !== "quiz") {
+      ignoringHash = true;
+      history.replaceState(null, "", "#/quiz");
+      ignoringHash = false;
+    }
+    goQuizHash("session", { replace: quizSub() === "results" });
     requestAnimationFrame(() => {
       els.question?.focus?.();
       scrollQuizTop(false);
     });
+  }
+
+  /** Header Back / Escape while nested in quiz. */
+  function popQuizNested() {
+    if (isMidQuiz()) {
+      if (!confirm("Leave the quiz? Progress on this attempt will be lost.")) return;
+      // Prefer history.back when we pushed session from hub.
+      if (quizSub() === "session") {
+        ignoringHash = true;
+        resetToIntro({ updateHash: false });
+        history.back();
+        requestAnimationFrame(() => {
+          if (quizSub() !== "" && currentRoute() === "quiz") {
+            history.replaceState(null, "", "#/quiz");
+          }
+          ignoringHash = false;
+          syncQuizChrome("intro");
+        });
+        return;
+      }
+      resetToIntro({ updateHash: true });
+      return;
+    }
+    if (isResultsView()) {
+      if (quizSub() === "results") {
+        ignoringHash = true;
+        resetToIntro({ updateHash: false });
+        history.back();
+        requestAnimationFrame(() => {
+          if (currentRoute() === "quiz" && quizSub() !== "") {
+            history.replaceState(null, "", "#/quiz");
+          }
+          ignoringHash = false;
+          syncQuizChrome("intro");
+        });
+        return;
+      }
+      resetToIntro({ updateHash: true });
+    }
   }
 
   function renderQuestion() {
@@ -506,6 +587,7 @@
     }
 
     setView("results");
+    goQuizHash("results", { replace: true });
     scrollQuizTop(true);
   }
 
@@ -516,44 +598,128 @@
     closeSession();
   }
 
+  function applyQuizHash() {
+    if (currentRoute() !== "quiz") {
+      if (isMidQuiz() || isResultsView()) {
+        // Screen left — chrome cleared by app.js; keep data reset if abandoned
+      }
+      return;
+    }
+    const sub = quizSub();
+    if (sub === "session") {
+      if (!isMidQuiz()) {
+        // Deep link / restore: begin a fresh attempt
+        index = 0;
+        answers = QUESTIONS.map(() => ({ selected: null, correct: null }));
+        answeredThis = false;
+        setView("active");
+        renderQuestion();
+      } else {
+        syncQuizChrome("active");
+      }
+      scrollQuizTop(false);
+      return;
+    }
+    if (sub === "results") {
+      if (!isResultsView()) {
+        // No results payload — fall back to hub
+        resetToIntro({ updateHash: true });
+        return;
+      }
+      syncQuizChrome("results");
+      scrollQuizTop(false);
+      return;
+    }
+    // Hub #/quiz
+    if (isMidQuiz()) {
+      // Popped from session via browser back
+      resetToIntro({ updateHash: false });
+      return;
+    }
+    if (isResultsView()) {
+      resetToIntro({ updateHash: false });
+      return;
+    }
+    setView("intro");
+    showLastSummary();
+    scrollQuizTop(false);
+  }
+
   // When leaving the quiz screen mid-attempt via menu / hash, confirm then reset
   let wasOnQuiz = currentRoute() === "quiz";
+  let wasSub = quizSub();
   window.addEventListener("hashchange", () => {
     if (ignoringHash) return;
     const onQuiz = currentRoute() === "quiz";
+    const sub = quizSub();
+
     if (wasOnQuiz && !onQuiz && isMidQuiz()) {
       const ok = confirm("Leave the quiz? Progress on this attempt will be lost.");
       if (!ok) {
         ignoringHash = true;
-        location.hash = "#/quiz";
+        location.hash = "#/quiz/session";
         requestAnimationFrame(() => { ignoringHash = false; });
         wasOnQuiz = true;
+        wasSub = "session";
         return;
       }
-      resetToIntro();
+      resetToIntro({ updateHash: false });
+      syncQuizChrome("intro");
+      wasOnQuiz = false;
+      wasSub = null;
+      return;
     }
-    if (onQuiz && !wasOnQuiz) {
-      // Arriving at quiz screen — show intro unless already mid-quiz/results
-      if (!isMidQuiz() && !(els.results && !els.results.hidden)) {
-        setView("intro");
-        showLastSummary();
+
+    if (onQuiz) {
+      // Browser back from session → hub while mid-quiz: confirm
+      if (wasSub === "session" && sub === "" && isMidQuiz()) {
+        const ok = confirm("Leave the quiz? Progress on this attempt will be lost.");
+        if (!ok) {
+          ignoringHash = true;
+          location.hash = "#/quiz/session";
+          requestAnimationFrame(() => { ignoringHash = false; });
+          wasOnQuiz = true;
+          wasSub = "session";
+          return;
+        }
+        resetToIntro({ updateHash: false });
+        wasOnQuiz = true;
+        wasSub = "";
+        return;
       }
-      scrollQuizTop(false);
+      applyQuizHash();
     }
+
     wasOnQuiz = onQuiz;
+    wasSub = sub;
+  });
+
+  document.addEventListener("nz-nav-back", (e) => {
+    if ((e.detail && e.detail.screen && e.detail.screen !== "quiz") || currentRoute() !== "quiz") return;
+    if (!isMidQuiz() && !isResultsView()) return;
+    popQuizNested();
   });
 
   // Intercept other screen menu links while mid-quiz (before hash flips)
   document.querySelectorAll('.toc-link[data-screen]').forEach((el) => {
     el.addEventListener("click", (e) => {
-      if (el.dataset.screen === "quiz") return;
+      if (el.dataset.screen === "quiz") {
+        // Re-selecting Knowledge check while in session → pop to hub
+        if (isMidQuiz() || isResultsView()) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          popQuizNested();
+        }
+        return;
+      }
       if (!isMidQuiz()) return;
       if (!confirm("Leave the quiz? Progress on this attempt will be lost.")) {
         e.preventDefault();
         e.stopImmediatePropagation();
         return;
       }
-      resetToIntro();
+      resetToIntro({ updateHash: false });
+      syncQuizChrome("intro");
     }, true);
   });
 
@@ -562,5 +728,10 @@
   els.retake.addEventListener("click", startQuiz);
   els.done?.addEventListener("click", requestExitSession);
 
-  resetToIntro();
+  // Initial: respect deep link into session/results
+  if (currentRoute() === "quiz" && (quizSub() === "session" || quizSub() === "results")) {
+    applyQuizHash();
+  } else {
+    resetToIntro({ updateHash: false });
+  }
 })();

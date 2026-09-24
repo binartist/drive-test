@@ -23,13 +23,26 @@
   /** Last primary screen under a pushed secondary (for Back when history cannot pop). */
   let stackBase = "guide";
   let secondaryPushed = false;
+  /** In-screen stack (e.g. quiz questions) — same back chrome as secondary screens. */
+  let nestedMode = false;
+  let nestedTitle = null;
 
   function isSecondary(name) {
     return SCREENS.includes(name) && !PRIMARY_SCREENS.includes(name);
   }
 
+  function setNestedMode(on, { title = null } = {}) {
+    nestedMode = !!on;
+    nestedTitle = nestedMode ? title : null;
+    syncNavChrome(currentScreen);
+    if (screenTitle) {
+      if (nestedMode && nestedTitle) screenTitle.textContent = nestedTitle;
+      else screenTitle.textContent = SCREEN_TITLES[currentScreen] || "Guide";
+    }
+  }
+
   function syncNavChrome(name) {
-    const secondary = isSecondary(name);
+    const secondary = isSecondary(name) || nestedMode;
     document.body.classList.toggle("is-secondary", secondary);
     if (navOpen) {
       if (secondary) {
@@ -40,11 +53,23 @@
       }
     }
     if (navBack) {
-      if (secondary) navBack.removeAttribute("hidden");
-      else navBack.setAttribute("hidden", "");
+      if (secondary) {
+        navBack.removeAttribute("hidden");
+        navBack.setAttribute(
+          "aria-label",
+          nestedMode ? "Back" : "Back"
+        );
+      } else {
+        navBack.setAttribute("hidden", "");
+      }
     }
     if (secondary) closeNav();
   }
+
+  document.addEventListener("nz-set-nested", (e) => {
+    const d = e.detail || {};
+    setNestedMode(!!d.on, { title: d.title || null });
+  });
 
   // Theme (Settings screen)
   const themeStatus = document.getElementById("themeStatus");
@@ -92,7 +117,7 @@
   });
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
-      if (isSecondary(currentScreen)) {
+      if (nestedMode || isSecondary(currentScreen)) {
         popSecondary();
         return;
       }
@@ -113,10 +138,15 @@
 
   function showScreen(name, { scrollTop = true } = {}) {
     if (!SCREENS.includes(name)) name = "guide";
+    const leftQuiz = currentScreen === "quiz" && name !== "quiz";
     currentScreen = name;
     if (!isSecondary(name)) {
       stackBase = name;
       secondaryPushed = false;
+    }
+    if (name !== "quiz" || leftQuiz) {
+      // Leaving quiz clears in-quiz nest; quiz.js re-asserts if still on a session hash.
+      if (name !== "quiz") nestedMode = false;
     }
     screens.forEach((el) => {
       const on = el.dataset.screen === name;
@@ -125,11 +155,16 @@
       else el.setAttribute("hidden", "");
     });
     screenLinks.forEach((link) => {
-      link.classList.toggle("is-active", link.dataset.screen === name);
-      link.classList.toggle("active", link.dataset.screen === name);
+      const match = link.dataset.screen === name;
+      link.classList.toggle("is-active", match);
+      link.classList.toggle("active", match);
     });
     if (screenTitle) {
-      screenTitle.textContent = SCREEN_TITLES[name] || "Guide";
+      if (nestedMode && nestedTitle && name === "quiz") {
+        screenTitle.textContent = nestedTitle;
+      } else {
+        screenTitle.textContent = SCREEN_TITLES[name] || "Guide";
+      }
     }
     syncNavChrome(name);
     if (progressWrap) {
@@ -143,6 +178,7 @@
 
   function goScreen(name, { replace = false, scrollTop = true } = {}) {
     if (!SCREENS.includes(name)) name = "guide";
+    // Always land on the screen hub hash (quiz session sub-routes are owned by quiz.js).
     const hash = "#/" + name;
     const toSecondary = isSecondary(name);
     const fromSecondary = isSecondary(currentScreen);
@@ -167,6 +203,10 @@
   }
 
   function popSecondary() {
+    if (nestedMode) {
+      document.dispatchEvent(new CustomEvent("nz-nav-back", { detail: { screen: currentScreen } }));
+      return;
+    }
     if (secondaryPushed && isSecondary(currentScreen)) {
       secondaryPushed = false;
       history.back();
