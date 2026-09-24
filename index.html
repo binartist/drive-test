@@ -45,7 +45,7 @@
         <a href="#petrol" class="toc-link" data-section="petrol">6. Filling petrol</a>
         <a href="#tips" class="toc-link" data-section="tips">Practical tips</a>
         <a href="#playlist" class="toc-link" data-section="playlist">Video playlist</a>
-        <a href="#quiz" class="toc-link" data-section="quiz">Knowledge check</a>
+        <a href="#quiz" class="toc-link" data-section="quiz" data-quiz-open>Knowledge check</a>
         <a href="#checklist" class="toc-link" data-section="checklist">Trip checklist</a>
       </nav>
       <div class="sidebar-card">
@@ -64,7 +64,7 @@
         <p class="lede">A reading-friendly guide for your first week on North Island roads. Short chapters, real NZ photos, clear diagrams, and curated videos.</p>
         <div class="hero-actions">
           <a class="primary-btn" href="#drive">Start chapter 1</a>
-          <a class="secondary-btn" href="#quiz">Knowledge check</a>
+          <a class="secondary-btn" href="#quiz" data-quiz-open>Knowledge check</a>
         </div>
         <ul class="stat-row">
           <li><strong>6</strong><span>chapters</span></li>
@@ -706,21 +706,17 @@
       </section>
 
 
-      <!-- QUIZ -->
-      <section class="chapter" id="quiz" data-chapter="quiz">
+      <!-- QUIZ launch (session is fullscreen, isolated) -->
+      <section class="chapter quiz-launch" id="quiz" data-chapter="quiz">
         <header class="chapter-head">
           <p class="chapter-num">Practice</p>
           <h2>Knowledge check</h2>
-          <p class="chapter-summary">Twelve calm questions on the NZ newcomer basics. One at a time, with a short explanation after each answer.</p>
+          <p class="chapter-summary">Opens in its own full-screen session — away from the guide — so you can focus on each question.</p>
         </header>
-
-        <div class="quiz-last" id="quizLast" hidden></div>
-
-        <div class="quiz-shell" id="quizShell">
-          <div class="quiz-intro" id="quizIntro">
-            <p>Covers left-side driving, roundabouts, give way, yellow lines, signs, petrol grades, and a few everyday rules. Your score stays on this device only.</p>
-            <button type="button" class="primary-btn quiz-start-btn" id="quizStart">Start focused quiz</button>
-          </div>
+        <div class="quiz-launch-card">
+          <p>Multiple choice and yes/no on left-side driving, roundabouts, signs, parking, and petrol. Score stays in this browser only.</p>
+          <div class="quiz-last" id="quizLast" hidden></div>
+          <button type="button" class="primary-btn quiz-start-btn" id="quizOpen">Open knowledge check</button>
         </div>
       </section>
 
@@ -765,10 +761,23 @@
           <p class="quiz-session-kicker">Knowledge check</p>
           <h2 class="quiz-session-title" id="quizSessionTitle">Focused practice</h2>
         </div>
-        <button type="button" class="ghost-btn quiz-session-exit" id="quizExit">Exit</button>
+        <button type="button" class="ghost-btn quiz-session-exit" id="quizExit">Exit to guide</button>
       </header>
 
       <div class="quiz-session-body">
+        <div class="quiz-intro" id="quizIntro">
+          <div class="quiz-intro-card">
+            <p class="quiz-intro-lead">This session is separate from the reading guide. One question at a time, with a short explanation after each answer.</p>
+            <ul class="quiz-intro-meta">
+              <li>Multiple choice and yes / no</li>
+              <li>Illustrations when they help</li>
+              <li>Results saved only on this device</li>
+            </ul>
+            <div class="quiz-last quiz-last-session" id="quizLastSession" hidden></div>
+            <button type="button" class="primary-btn quiz-start-btn" id="quizStart">Start quiz</button>
+          </div>
+        </div>
+
         <div class="quiz-active" id="quizActive" hidden>
           <div class="quiz-progress-row" aria-live="polite">
             <p class="quiz-progress-label" id="quizProgressLabel">Question 1 of 12</p>

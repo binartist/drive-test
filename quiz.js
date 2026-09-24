@@ -153,6 +153,8 @@
     active: document.getElementById("quizActive"),
     results: document.getElementById("quizResults"),
     start: document.getElementById("quizStart"),
+    openBtn: document.getElementById("quizOpen"),
+    lastSession: document.getElementById("quizLastSession"),
     progressLabel: document.getElementById("quizProgressLabel"),
     progressFill: document.getElementById("quizProgressFill"),
     media: document.getElementById("quizMedia"),
@@ -175,7 +177,7 @@
     welcomeClose: document.getElementById("quizWelcomeClose"),
   };
 
-  if (!els.start || !els.active) return;
+  if ((!els.start && !els.openBtn) || !els.active || !els.session) return;
 
   let index = 0;
   /** @type {{selected: (number|boolean|null), correct: boolean|null}[]} */
@@ -232,25 +234,35 @@
     }
   }
 
+  function summaryHtml(last, best, attempts) {
+    return (
+      `<strong>Last attempt:</strong> ${last.score}/${last.total}` +
+      ` · ${formatWhen(last.at)}` +
+      (attempts > 1 ? ` · Best: ${best}/${last.total} · ${attempts} attempts` : "")
+    );
+  }
+
   function showLastSummary() {
     const last = loadLast();
     const bestRaw = localStorage.getItem(KEYS.best);
     const attempts = Number(localStorage.getItem(KEYS.attempts) || "0");
-    if (!els.last) return;
+    const targets = [els.last, els.lastSession].filter(Boolean);
     if (!last) {
-      els.last.hidden = true;
-      els.last.textContent = "";
+      targets.forEach((el) => {
+        el.hidden = true;
+        el.textContent = "";
+      });
       return;
     }
     const best = bestRaw != null ? Number(bestRaw) : last.score;
-    els.last.hidden = false;
-    els.last.innerHTML =
-      `<strong>Last attempt:</strong> ${last.score}/${last.total}` +
-      ` · ${formatWhen(last.at)}` +
-      (attempts > 1 ? ` · Best: ${best}/${last.total} · ${attempts} attempts` : "");
+    const html = summaryHtml(last, best, attempts);
+    targets.forEach((el) => {
+      el.hidden = false;
+      el.innerHTML = html;
+    });
   }
 
-  function persistResult(score, total, perQuestion) {
+  function persistResultfunction persistResult(score, total, perQuestion) {
     const payload = {
       score,
       total,
@@ -276,22 +288,69 @@
     if (els.intro) els.intro.hidden = view !== "intro";
     els.active.hidden = view !== "active";
     els.results.hidden = view !== "results";
+    if (els.session) {
+      const title = document.getElementById("quizSessionTitle");
+      if (title) {
+        title.textContent =
+          view === "results" ? "Your result" :
+          view === "active" ? "Question time" :
+          "Focused practice";
+      }
+    }
+  }
+
+  function setGuideInert(on) {
+    const nodes = [
+      document.querySelector(".topbar"),
+      document.querySelector(".shell"),
+      document.querySelector(".backdrop"),
+    ];
+    nodes.forEach((node) => {
+      if (!node) return;
+      if (on) {
+        node.setAttribute("inert", "");
+        node.setAttribute("aria-hidden", "true");
+      } else {
+        node.removeAttribute("inert");
+        node.removeAttribute("aria-hidden");
+      }
+    });
   }
 
   function openSession() {
     if (!els.session) return;
     els.session.hidden = false;
     document.body.classList.add("quiz-session-open");
+    setGuideInert(true);
+    // Isolate URL without scrolling the guide underneath
+    if (location.hash !== "#quiz") {
+      history.replaceState(null, "", "#quiz");
+    }
   }
 
   function closeSession() {
     if (!els.session) return;
     els.session.hidden = true;
     document.body.classList.remove("quiz-session-open");
+    setGuideInert(false);
     setView("intro");
     showLastSummary();
     const section = document.getElementById("quiz");
+    if (location.hash === "#quiz") {
+      history.replaceState(null, "", " ");
+      history.replaceState(null, "", "#quiz");
+    }
     section?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  /** Open the isolated quiz screen (intro hub), without starting questions yet. */
+  function openQuizHub() {
+    openSession();
+    setView("intro");
+    showLastSummary();
+    requestAnimationFrame(() => {
+      (els.start || els.exit)?.focus();
+    });
   }
 
   function startQuiz() {
@@ -303,6 +362,7 @@
     renderQuestion();
     requestAnimationFrame(() => {
       els.question?.focus?.();
+      els.session?.querySelector(".quiz-session-body")?.scrollTo({ top: 0 });
     });
   }
 
@@ -540,18 +600,42 @@
     hideWelcome();
   }
 
-  els.start.addEventListener("click", startQuiz);
+  els.start?.addEventListener("click", startQuiz);
+  els.openBtn?.addEventListener("click", openQuizHub);
+  document.querySelectorAll("[data-quiz-open]").forEach((el) => {
+    el.addEventListener("click", (e) => {
+      e.preventDefault();
+      // close mobile nav if open
+      document.getElementById("backdrop")?.click();
+      openQuizHub();
+    });
+  });
+  window.addEventListener("hashchange", () => {
+    if (location.hash === "#quiz" && els.session?.hidden) openQuizHub();
+  });
+  if (location.hash === "#quiz") {
+    // Defer so welcome modal can decide first
+    setTimeout(() => {
+      if (els.welcome && !els.welcome.hidden) return;
+      if (els.session?.hidden) openQuizHub();
+    }, 0);
+  }
   els.next.addEventListener("click", goNext);
   els.retake.addEventListener("click", startQuiz);
-  els.exit?.addEventListener("click", () => {
-    if (confirm("Exit the quiz and return to the guide?")) closeSession();
-  });
+  function requestExitSession() {
+    const midQuiz = els.active && !els.active.hidden;
+    if (midQuiz) {
+      if (!confirm("Exit the quiz and return to the guide? Progress on this attempt will be lost.")) return;
+    }
+    closeSession();
+  }
+  els.exit?.addEventListener("click", requestExitSession);
   els.done?.addEventListener("click", closeSession);
   window.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && els.session && !els.session.hidden && (!els.welcome || els.welcome.hidden)) {
-      // don't steal Escape from welcome modal
-      if (confirm("Exit the quiz and return to the guide?")) closeSession();
-    }
+    if (e.key !== "Escape") return;
+    if (!els.session || els.session.hidden) return;
+    if (els.welcome && !els.welcome.hidden) return;
+    requestExitSession();
   });
   els.welcomeStart?.addEventListener("click", beginFromWelcome);
   els.welcomeSkip?.addEventListener("click", skipWelcome);
