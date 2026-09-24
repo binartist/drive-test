@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>NZ Driving Guide — North Island Newcomer</title>
   <meta name="description" content="A calm, image-rich guide to driving, parking, and filling petrol in New Zealand." />
+  <meta name="theme-color" content="#0f6e56" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -29,14 +31,18 @@
 
   <div class="shell">
     <aside class="sidebar" id="sidebar" aria-label="Chapters">
-      <p class="sidebar-label">Chapters</p>
+      <div class="sidebar-head">
+        <p class="sidebar-label">Chapters</p>
+        <button type="button" class="ghost-btn nav-close" id="navClose" aria-label="Close menu">Close</button>
+      </div>
       <nav class="toc">
         <a href="#start" class="toc-link" data-section="start">Start here</a>
         <a href="#drive" class="toc-link" data-section="drive">1. Drive on the left</a>
         <a href="#roundabouts" class="toc-link" data-section="roundabouts">2. Roundabouts</a>
         <a href="#give-way" class="toc-link" data-section="give-way">3. Who gives way</a>
-        <a href="#parking" class="toc-link" data-section="parking">4. Parking</a>
-        <a href="#petrol" class="toc-link" data-section="petrol">5. Filling petrol</a>
+        <a href="#signs" class="toc-link" data-section="signs">4. Sign reading</a>
+        <a href="#parking" class="toc-link" data-section="parking">5. Parking</a>
+        <a href="#petrol" class="toc-link" data-section="petrol">6. Filling petrol</a>
         <a href="#playlist" class="toc-link" data-section="playlist">Video playlist</a>
         <a href="#checklist" class="toc-link" data-section="checklist">Trip checklist</a>
       </nav>
@@ -59,7 +65,7 @@
           <a class="secondary-btn" href="#playlist">Jump to videos</a>
         </div>
         <ul class="stat-row">
-          <li><strong>5</strong><span>chapters</span></li>
+          <li><strong>6</strong><span>chapters</span></li>
           <li><strong>~25 min</strong><span>video watchlist</span></li>
           <li><strong>Left</strong><span>side of the road</span></li>
         </ul>
@@ -201,10 +207,183 @@
         <p class="refs">Official reading: <a href="https://nzta.govt.nz/roadcode/general-road-code/about-driving/giving-way/the-give-way-rules" target="_blank" rel="noopener">The give way rules</a></p>
       </section>
 
-      <!-- PARKING -->
-      <section class="chapter" id="parking" data-chapter="4">
+
+      <!-- SIGNS -->
+      <section class="chapter" id="signs" data-chapter="4">
         <header class="chapter-head">
           <p class="chapter-num">Chapter 4</p>
+          <h2>Sign reading</h2>
+          <p class="chapter-summary">Learn the shapes and colours you will see every day — then trust the sign, not old habits from home.</p>
+        </header>
+
+        <div class="callout warn">
+          <strong>Obey the sign</strong>
+          <p>Always follow the NZ sign in front of you over habits from other countries. Shapes and colours can mean different things elsewhere.</p>
+        </div>
+
+        <div class="sign-grid">
+          <article class="sign-card">
+            <div class="sign-visual" aria-hidden="true">
+              <svg viewBox="0 0 80 80" width="72" height="72" role="img">
+                <polygon points="40,8 74,70 6,70" fill="#fff" stroke="#c8102e" stroke-width="5"/>
+                <text x="40" y="58" text-anchor="middle" font-size="11" font-weight="700" fill="#1c2430" font-family="system-ui,sans-serif">GIVE WAY</text>
+              </svg>
+            </div>
+            <h4>Give Way</h4>
+            <p>Inverted triangle — slow and yield. Stop only if needed.</p>
+          </article>
+
+          <article class="sign-card">
+            <div class="sign-visual" aria-hidden="true">
+              <svg viewBox="0 0 80 80" width="72" height="72" role="img">
+                <polygon points="40,6 66,18 74,44 66,70 40,78 14,70 6,44 14,18" fill="#c8102e" stroke="#fff" stroke-width="3"/>
+                <text x="40" y="46" text-anchor="middle" font-size="14" font-weight="700" fill="#fff" font-family="system-ui,sans-serif">STOP</text>
+              </svg>
+            </div>
+            <h4>Stop</h4>
+            <p>Red octagon — full stop, then go when clear.</p>
+          </article>
+
+          <article class="sign-card">
+            <div class="sign-visual" aria-hidden="true">
+              <svg viewBox="0 0 80 80" width="72" height="72" role="img">
+                <circle cx="40" cy="40" r="30" fill="#fff" stroke="#c8102e" stroke-width="5"/>
+                <text x="40" y="46" text-anchor="middle" font-size="22" font-weight="700" fill="#1c2430" font-family="system-ui,sans-serif">50</text>
+              </svg>
+            </div>
+            <h4>Speed limit</h4>
+            <p>Number in a red circle = km/h. Open road is often 100.</p>
+          </article>
+
+          <article class="sign-card">
+            <div class="sign-visual" aria-hidden="true">
+              <svg viewBox="0 0 80 80" width="72" height="72" role="img">
+                <rect x="10" y="18" width="60" height="44" rx="4" fill="#fff" stroke="#c8102e" stroke-width="3"/>
+                <text x="40" y="36" text-anchor="middle" font-size="9" font-weight="700" fill="#1c2430" font-family="system-ui,sans-serif">SCHOOL</text>
+                <text x="40" y="52" text-anchor="middle" font-size="16" font-weight="700" fill="#c8102e" font-family="system-ui,sans-serif">40</text>
+              </svg>
+            </div>
+            <h4>School zone</h4>
+            <p>Lower limit near schools — often 40 when children are about.</p>
+          </article>
+
+          <article class="sign-card">
+            <div class="sign-visual" aria-hidden="true">
+              <svg viewBox="0 0 80 80" width="72" height="72" role="img">
+                <rect x="8" y="48" width="64" height="10" fill="#1c2430"/>
+                <rect x="8" y="52" width="64" height="4" fill="#f5c518"/>
+                <circle cx="40" cy="28" r="16" fill="#fff" stroke="#c8102e" stroke-width="3"/>
+                <line x1="28" y1="16" x2="52" y2="40" stroke="#c8102e" stroke-width="3"/>
+                <text x="40" y="32" text-anchor="middle" font-size="8" font-weight="700" fill="#1c2430" font-family="system-ui,sans-serif">P</text>
+              </svg>
+            </div>
+            <h4>No stopping</h4>
+            <p>Solid yellow kerb line — do not stop, even briefly.</p>
+          </article>
+
+          <article class="sign-card">
+            <div class="sign-visual" aria-hidden="true">
+              <svg viewBox="0 0 80 80" width="72" height="72" role="img">
+                <rect x="8" y="48" width="64" height="10" fill="#1c2430"/>
+                <rect x="10" y="52" width="12" height="4" fill="#f5c518"/>
+                <rect x="28" y="52" width="12" height="4" fill="#f5c518"/>
+                <rect x="46" y="52" width="12" height="4" fill="#f5c518"/>
+                <rect x="64" y="52" width="6" height="4" fill="#f5c518"/>
+                <circle cx="40" cy="28" r="16" fill="#fff" stroke="#c8102e" stroke-width="3"/>
+                <line x1="28" y1="16" x2="52" y2="40" stroke="#c8102e" stroke-width="3"/>
+                <text x="40" y="32" text-anchor="middle" font-size="8" font-weight="700" fill="#1c2430" font-family="system-ui,sans-serif">P</text>
+              </svg>
+            </div>
+            <h4>No parking</h4>
+            <p>Broken yellow — brief drop-off only if you stay with the car. Read the pole sign.</p>
+          </article>
+
+          <article class="sign-card">
+            <div class="sign-visual" aria-hidden="true">
+              <svg viewBox="0 0 80 80" width="72" height="72" role="img">
+                <polygon points="40,8 72,72 8,72" fill="#f5c518" stroke="#1c2430" stroke-width="2"/>
+                <circle cx="40" cy="48" r="12" fill="none" stroke="#1c2430" stroke-width="2.5"/>
+                <polygon points="40,36 44,42 40,40 36,42" fill="#1c2430"/>
+              </svg>
+            </div>
+            <h4>Roundabout ahead</h4>
+            <p>Yellow diamond warning — slow down and prepare to give way.</p>
+          </article>
+
+          <article class="sign-card">
+            <div class="sign-visual" aria-hidden="true">
+              <svg viewBox="0 0 80 80" width="72" height="72" role="img">
+                <polygon points="40,8 72,72 8,72" fill="#f5c518" stroke="#1c2430" stroke-width="2"/>
+                <rect x="28" y="38" width="24" height="8" fill="#1c2430"/>
+                <polygon points="52,34 64,42 52,50" fill="#1c2430"/>
+                <text x="40" y="66" text-anchor="middle" font-size="7" font-weight="700" fill="#1c2430" font-family="system-ui,sans-serif">PRIORITY</text>
+              </svg>
+            </div>
+            <h4>One-lane bridge</h4>
+            <p>Check who has priority before you enter — look for the arrow sign.</p>
+          </article>
+
+          <article class="sign-card">
+            <div class="sign-visual" aria-hidden="true">
+              <svg viewBox="0 0 80 80" width="72" height="72" role="img">
+                <circle cx="40" cy="40" r="28" fill="#0b5cab"/>
+                <circle cx="40" cy="40" r="28" fill="none" stroke="#fff" stroke-width="3"/>
+                <polygon points="28,28 28,52 48,40" fill="#fff"/>
+              </svg>
+            </div>
+            <h4>Keep Left</h4>
+            <p>Blue circle with white arrow — stay in the left lane or side.</p>
+          </article>
+
+          <article class="sign-card">
+            <div class="sign-visual" aria-hidden="true">
+              <svg viewBox="0 0 80 80" width="72" height="72" role="img">
+                <polygon points="40,8 72,72 8,72" fill="#f5c518" stroke="#1c2430" stroke-width="2"/>
+                <rect x="22" y="36" width="36" height="20" rx="2" fill="#1c2430"/>
+                <text x="40" y="50" text-anchor="middle" font-size="8" font-weight="700" fill="#f5c518" font-family="system-ui,sans-serif">ROADWORKS</text>
+              </svg>
+            </div>
+            <h4>Roadworks</h4>
+            <p>Temporary yellow signs — slow for workers and changed lanes.</p>
+          </article>
+
+          <article class="sign-card">
+            <div class="sign-visual" aria-hidden="true">
+              <svg viewBox="0 0 80 80" width="72" height="72" role="img">
+                <rect x="14" y="14" width="52" height="52" rx="4" fill="#f5c518" stroke="#1c2430" stroke-width="2"/>
+                <circle cx="40" cy="40" r="18" fill="#fff" stroke="#c8102e" stroke-width="4"/>
+                <text x="40" y="46" text-anchor="middle" font-size="16" font-weight="700" fill="#1c2430" font-family="system-ui,sans-serif">30</text>
+              </svg>
+            </div>
+            <h4>Temporary speed</h4>
+            <p>Orange or yellow board with a lower limit — obey until the end sign.</p>
+          </article>
+
+          <article class="sign-card">
+            <div class="sign-visual" aria-hidden="true">
+              <svg viewBox="0 0 80 80" width="72" height="72" role="img">
+                <rect x="8" y="22" width="64" height="36" rx="3" fill="#0f6e56"/>
+                <text x="40" y="40" text-anchor="middle" font-size="10" font-weight="700" fill="#fff" font-family="system-ui,sans-serif">SH 1</text>
+                <text x="40" y="52" text-anchor="middle" font-size="8" fill="#d8f0e7" font-family="system-ui,sans-serif">Auckland →</text>
+              </svg>
+            </div>
+            <h4>Highway shields</h4>
+            <p>Green = state highway directions. Blue = local or motorway info.</p>
+          </article>
+        </div>
+
+        <div class="callout tip">
+          <strong>Pole signs win</strong>
+          <p>Kerb lines set the rule; the sign on the pole adds time limits, paid zones, and exceptions. Read both.</p>
+        </div>
+
+        <p class="refs">Official reading: <a href="https://www.nzta.govt.nz/roadcode/heavy-vehicle-road-code/road-code/about-signs/main-types-of-signs" target="_blank" rel="noopener">Main types of signs — Waka Kotahi</a> · <a href="https://nzta.govt.nz/safety/visiting-new-zealand" target="_blank" rel="noopener">Visiting NZ</a></p>
+      </section>
+
+      <!-- PARKING -->
+      <section class="chapter" id="parking" data-chapter="5">
+        <header class="chapter-head">
+          <p class="chapter-num">Chapter 5</p>
           <h2>Parking</h2>
           <p class="chapter-summary">Yellow lines mean different things. Always read the pole sign.</p>
         </header>
@@ -240,9 +419,9 @@
       </section>
 
       <!-- PETROL -->
-      <section class="chapter" id="petrol" data-chapter="5">
+      <section class="chapter" id="petrol" data-chapter="6">
         <header class="chapter-head">
-          <p class="chapter-num">Chapter 5</p>
+          <p class="chapter-num">Chapter 6</p>
           <h2>Filling petrol</h2>
           <p class="chapter-summary">It’s called petrol here. Most rentals take 91. Match the flap sticker.</p>
         </header>
@@ -344,6 +523,7 @@
           <li><label><input type="checkbox" data-key="left" /> Practised “keep left” mentally at intersections</label></li>
           <li><label><input type="checkbox" data-key="roundabout" /> Watched roundabout signalling video</label></li>
           <li><label><input type="checkbox" data-key="yellow" /> Know solid vs broken yellow lines</label></li>
+          <li><label><input type="checkbox" data-key="signs" /> Reviewed common NZ road signs</label></li>
           <li><label><input type="checkbox" data-key="atpark" /> If Auckland: AT Park app installed</label></li>
           <li><label><input type="checkbox" data-key="fuel" /> Know rental fuel type (usually 91)</label></li>
           <li><label><input type="checkbox" data-key="full" /> Plan to return the car full if required</label></li>

@@ -37,8 +37,13 @@
     if (sidebar?.classList.contains("open")) closeNav();
     else openNav();
   });
+  const navClose = document.getElementById("navClose");
   backdrop?.addEventListener("click", closeNav);
+  navClose?.addEventListener("click", closeNav);
   tocLinks.forEach((link) => link.addEventListener("click", closeNav));
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeNav();
+  });
 
   // Active section + reading progress
   function onScroll() {
