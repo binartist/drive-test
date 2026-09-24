@@ -7,13 +7,18 @@
   <meta name="description" content="A calm, image-rich guide to driving, parking, and filling petrol in New Zealand." />
   <meta name="theme-color" content="#0f6e56" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <link rel="stylesheet" href="styles.css?v=20260925a" />
+  <link rel="stylesheet" href="styles.css?v=20260925c" />
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="topbar">
     <div class="topbar-inner">
+      <button type="button" class="ghost-btn nav-open drawer-btn" id="navOpen" aria-controls="sidebar" aria-expanded="false" aria-label="Open menu">
+        <span class="drawer-icon" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
+      </button>
       <div class="brand">
         <span class="brand-mark" aria-hidden="true">NZ</span>
         <div>
@@ -24,7 +29,6 @@
       <div class="topbar-actions">
         <button type="button" class="ghost-btn" id="themeToggle" aria-label="Toggle dark mode">Theme</button>
         <button type="button" class="ghost-btn quiz-open-btn" id="quizOpenTop" data-quiz-open aria-haspopup="dialog" aria-controls="quizSession">Quiz</button>
-        <button type="button" class="ghost-btn nav-open" id="navOpen" aria-controls="sidebar" aria-expanded="false">Menu</button>
       </div>
     </div>
     <div class="progress" aria-hidden="true"><div class="progress-bar" id="progressBar"></div></div>
@@ -821,7 +825,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260925a"></script>
-  <script src="quiz.js?v=20260925a"></script>
+  <script src="app.js?v=20260925c"></script>
+  <script src="quiz.js?v=20260925c"></script>
 </body>
 </html>

@@ -85,9 +85,31 @@ a:hover { text-decoration: underline; }
   padding: 0.65rem var(--pad-x) 0.65rem var(--pad-r);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.65rem;
+  justify-content: flex-start;
+  gap: 0.55rem;
   min-height: var(--topbar-h);
+}
+.drawer-btn {
+  flex-shrink: 0;
+  width: var(--tap);
+  min-width: var(--tap);
+  padding: 0;
+  border-radius: 12px;
+}
+.drawer-icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 18px;
+  height: 14px;
+}
+.drawer-icon span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  border-radius: 2px;
+  background: currentColor;
 }
 .brand {
   display: flex;
@@ -122,6 +144,7 @@ a:hover { text-decoration: underline; }
   display: flex;
   gap: 0.4rem;
   flex-shrink: 0;
+  margin-left: auto;
 }
 .ghost-btn {
   border: 1px solid var(--line);
