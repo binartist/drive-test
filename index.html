@@ -7,7 +7,7 @@
   <meta name="description" content="A calm, image-rich guide to driving, parking, and filling petrol in New Zealand." />
   <meta name="theme-color" content="#0f6e56" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <link rel="stylesheet" href="styles.css?v=20260925f" />
+  <link rel="stylesheet" href="styles.css?v=20260925g" />
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -41,12 +41,9 @@
         <a href="#/tips" class="toc-link" data-screen="tips">Tips</a>
         <a href="#/playlist" class="toc-link" data-screen="playlist">Playlist</a>
         <a href="#/checklist" class="toc-link" data-screen="checklist">Checklist</a>
+        <a href="#/quiz" class="toc-link" data-screen="quiz">Knowledge check</a>
         <a href="#/settings" class="toc-link" data-screen="settings">Settings</a>
       </nav>
-      <div class="sidebar-tools" aria-label="App">
-        <p class="sidebar-tools-label">App</p>
-        <button type="button" class="toc-link toc-action" data-quiz-open aria-haspopup="dialog" aria-controls="quizSession">Knowledge check</button>
-      </div>
       <div class="sidebar-card">
         <p class="sidebar-card-title">Watch first</p>
         <p class="sidebar-card-text">10 minutes with NZ Police before you pick up the keys.</p>
@@ -780,91 +777,67 @@
         </section>
       </div>
 
+
+      <div class="screen" id="screen-quiz" data-screen="quiz" hidden>
+        <section class="chapter" id="quiz" data-chapter="quiz">
+          <header class="chapter-head">
+            <p class="chapter-num">Knowledge check</p>
+            <h2 id="quizSessionTitle">Practice quiz</h2>
+            <p class="chapter-summary">Practice questions on left-side driving, roundabouts, signs, parking, and petrol. Results stay on this device only.</p>
+          </header>
+
+          <div class="quiz-screen-body" id="quizSession">
+            <div class="quiz-intro" id="quizIntro">
+              <div class="quiz-intro-card">
+                <p class="quiz-intro-lead">This session is separate from the reading guide. One question at a time, with a short explanation after each answer.</p>
+                <ul class="quiz-intro-meta">
+                  <li>Multiple choice and yes / no</li>
+                  <li>Illustrations when they help</li>
+                  <li>Results saved only on this device</li>
+                </ul>
+                <div class="quiz-last quiz-last-session" id="quizLast" hidden></div>
+                <button type="button" class="primary-btn quiz-start-btn" id="quizStart">Start quiz</button>
+              </div>
+            </div>
+
+            <div class="quiz-active" id="quizActive" hidden>
+              <div class="quiz-progress-row" aria-live="polite">
+                <p class="quiz-progress-label" id="quizProgressLabel">Question 1 of 12</p>
+                <div class="quiz-progress-track" aria-hidden="true"><div class="quiz-progress-fill" id="quizProgressFill"></div></div>
+              </div>
+
+              <div class="quiz-card" id="quizCard">
+                <div class="quiz-media" id="quizMedia" hidden></div>
+                <h3 class="quiz-question" id="quizQuestion" tabindex="-1"></h3>
+                <p class="quiz-options-hint" id="quizOptionsHint">Choose one answer</p>
+                <div class="quiz-options" id="quizOptions" role="radiogroup" aria-labelledby="quizQuestion" aria-describedby="quizOptionsHint"></div>
+                <div class="quiz-feedback" id="quizFeedback" hidden role="status" aria-live="polite"></div>
+                <div class="quiz-nav">
+                  <button type="button" class="primary-btn" id="quizNext" hidden>Next question</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="quiz-results" id="quizResults" hidden>
+              <div class="quiz-score-card">
+                <p class="quiz-score-kicker">Your result</p>
+                <p class="quiz-score-big" id="quizScoreBig">0 / 12</p>
+                <p class="quiz-score-msg" id="quizScoreMsg"></p>
+              </div>
+              <div class="quiz-review" id="quizReview"></div>
+              <div class="quiz-result-actions">
+                <button type="button" class="primary-btn" id="quizRetake">Retake quiz</button>
+                <button type="button" class="secondary-btn" id="quizDone">Back to guide</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
 </main>
   </div>
 
-  
-  
-  <div class="quiz-drawer" id="quizSession" hidden>
-    <div class="quiz-drawer-backdrop" id="quizDrawerBackdrop" tabindex="-1"></div>
-    <div class="quiz-drawer-panel" role="dialog" aria-modal="true" aria-labelledby="quizSessionTitle">
-      <header class="quiz-drawer-bar">
-        <div class="quiz-drawer-brand">
-          <p class="quiz-drawer-kicker">Knowledge check</p>
-          <h2 class="quiz-drawer-title" id="quizSessionTitle">Focused practice</h2>
-        </div>
-        <button type="button" class="ghost-btn quiz-drawer-exit" id="quizExit">Close</button>
-      </header>
-
-      <div class="quiz-drawer-body">
-        <div class="quiz-intro" id="quizIntro">
-          <div class="quiz-intro-card">
-            <p class="quiz-intro-lead">This session is separate from the reading guide. One question at a time, with a short explanation after each answer.</p>
-            <ul class="quiz-intro-meta">
-              <li>Multiple choice and yes / no</li>
-              <li>Illustrations when they help</li>
-              <li>Results saved only on this device</li>
-            </ul>
-            <div class="quiz-last quiz-last-session" id="quizLast" hidden></div>
-            <button type="button" class="primary-btn quiz-start-btn" id="quizStart">Start quiz</button>
-          </div>
-        </div>
-
-        <div class="quiz-active" id="quizActive" hidden>
-          <div class="quiz-progress-row" aria-live="polite">
-            <p class="quiz-progress-label" id="quizProgressLabel">Question 1 of 12</p>
-            <div class="quiz-progress-track" aria-hidden="true"><div class="quiz-progress-fill" id="quizProgressFill"></div></div>
-          </div>
-
-          <div class="quiz-card" id="quizCard">
-            <div class="quiz-media" id="quizMedia" hidden></div>
-            <h3 class="quiz-question" id="quizQuestion" tabindex="-1"></h3>
-            <p class="quiz-options-hint" id="quizOptionsHint">Choose one answer</p>
-            <div class="quiz-options" id="quizOptions" role="radiogroup" aria-labelledby="quizQuestion" aria-describedby="quizOptionsHint"></div>
-            <div class="quiz-feedback" id="quizFeedback" hidden role="status" aria-live="polite"></div>
-            <div class="quiz-nav">
-              <button type="button" class="primary-btn" id="quizNext" hidden>Next question</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="quiz-results" id="quizResults" hidden>
-          <div class="quiz-score-card">
-            <p class="quiz-score-kicker">Your result</p>
-            <p class="quiz-score-big" id="quizScoreBig">0 / 12</p>
-            <p class="quiz-score-msg" id="quizScoreMsg"></p>
-          </div>
-          <div class="quiz-review" id="quizReview"></div>
-          <div class="quiz-result-actions">
-            <button type="button" class="primary-btn" id="quizRetake">Retake quiz</button>
-            <button type="button" class="secondary-btn" id="quizDone">Back to guide</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="quiz-modal" id="quizWelcome" hidden>
-    <div class="quiz-modal-backdrop" id="quizWelcomeBackdrop" tabindex="-1"></div>
-    <div
-      class="quiz-modal-dialog"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="quizWelcomeTitle"
-      aria-describedby="quizWelcomeDesc"
-    >
-      <button type="button" class="quiz-modal-close ghost-btn" id="quizWelcomeClose" aria-label="Close">×</button>
-      <p class="eyebrow">Quick start</p>
-      <h2 id="quizWelcomeTitle">Begin with a short knowledge check?</h2>
-      <p class="quiz-welcome-text" id="quizWelcomeDesc">Twelve questions on left-side driving, roundabouts, signs, parking, and petrol. Takes a few minutes — results stay in this browser only.</p>
-      <div class="quiz-welcome-actions">
-        <button type="button" class="primary-btn" id="quizWelcomeStart">Start quiz</button>
-        <button type="button" class="secondary-btn" id="quizWelcomeSkip">Browse the guide first</button>
-      </div>
-    </div>
-  </div>
-
-  <script src="app.js?v=20260925f"></script>
-  <script src="quiz.js?v=20260925f"></script>
+  <script src="app.js?v=20260925g"></script>
+  <script src="quiz.js?v=20260925g"></script>
 </body>
 </html>

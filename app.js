@@ -8,7 +8,7 @@
   const progressWrap = document.querySelector(".progress");
   const screens = [...document.querySelectorAll(".screen[data-screen]")];
   const screenLinks = [...document.querySelectorAll(".toc-link[data-screen]")];
-  const SCREENS = ["guide", "tips", "playlist", "checklist", "settings"];
+  const SCREENS = ["guide", "tips", "playlist", "checklist", "quiz", "settings"];
   let currentScreen = "guide";
 
   // Theme (Settings screen)

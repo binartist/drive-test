@@ -4,7 +4,6 @@
     last: STORAGE_PREFIX + "last",
     best: STORAGE_PREFIX + "best",
     attempts: STORAGE_PREFIX + "attempts",
-    welcomed: STORAGE_PREFIX + "welcomed",
   };
 
   /** @type {Array<{
@@ -153,8 +152,6 @@
     active: document.getElementById("quizActive"),
     results: document.getElementById("quizResults"),
     start: document.getElementById("quizStart"),
-    openBtn: document.getElementById("quizOpen"),
-    drawerBackdrop: document.getElementById("quizDrawerBackdrop"),
     lastSession: null,
     progressLabel: document.getElementById("quizProgressLabel"),
     progressFill: document.getElementById("quizProgressFill"),
@@ -168,22 +165,18 @@
     review: document.getElementById("quizReview"),
     retake: document.getElementById("quizRetake"),
     session: document.getElementById("quizSession"),
-    exit: document.getElementById("quizExit"),
+    screen: document.getElementById("screen-quiz"),
     done: document.getElementById("quizDone"),
-    welcome: document.getElementById("quizWelcome"),
-    welcomeDialog: document.querySelector("#quizWelcome .quiz-modal-dialog"),
-    welcomeBackdrop: document.getElementById("quizWelcomeBackdrop"),
-    welcomeStart: document.getElementById("quizWelcomeStart"),
-    welcomeSkip: document.getElementById("quizWelcomeSkip"),
-    welcomeClose: document.getElementById("quizWelcomeClose"),
   };
 
-  if ((!els.start && !els.openBtn) || !els.active || !els.session) return;
+  // Require quiz screen elements (no drawer)
+  if (!els.screen || !els.session || !els.active || !els.start) return;
 
   let index = 0;
   /** @type {{selected: (number|boolean|null), correct: boolean|null}[]} */
   let answers = [];
   let answeredThis = false;
+  let ignoringHash = false;
 
   function signSvg(kind) {
     if (kind === "giveway") {
@@ -289,65 +282,69 @@
     if (els.intro) els.intro.hidden = view !== "intro";
     els.active.hidden = view !== "active";
     els.results.hidden = view !== "results";
-    if (els.session) {
-      const title = document.getElementById("quizSessionTitle");
-      if (title) {
-        title.textContent =
-          view === "results" ? "Your result" :
-          view === "active" ? "Question time" :
-          "Focused practice";
-      }
+    const title = document.getElementById("quizSessionTitle");
+    if (title) {
+      title.textContent =
+        view === "results" ? "Your result" :
+        view === "active" ? "Question time" :
+        "Practice quiz";
     }
   }
 
-  function clearGuideLocks() {
-    document.body.classList.remove("quiz-drawer-open");
-    const main = document.getElementById("main");
-    if (main) {
-      main.removeAttribute("inert");
-      main.removeAttribute("aria-hidden");
-    }
+  function isMidQuiz() {
+    return els.active && !els.active.hidden;
   }
 
-  function openSession() {
-    if (!els.session) return;
-    els.session.hidden = false;
-    // force reflow so CSS transition runs
-    void els.session.offsetWidth;
-    els.session.classList.add("is-open");
-    document.body.classList.add("quiz-drawer-open");
-  }
-
-  function closeSession() {
-    if (!els.session) return;
-    els.session.classList.remove("is-open");
-    clearGuideLocks();
+  function resetToIntro() {
+    index = 0;
+    answers = [];
+    answeredThis = false;
     setView("intro");
     showLastSummary();
-    // Hide immediately so an invisible layer cannot trap clicks
-    els.session.hidden = true;
   }
 
-  /** Open the knowledge-check drawer (intro), not a page scroll target. */
+  function scrollQuizTop(smooth) {
+    window.scrollTo({ top: 0, behavior: smooth ? "smooth" : "auto" });
+  }
+
+  function currentRoute() {
+    const raw = (location.hash || "").replace(/^#/, "");
+    const route = raw.startsWith("/") ? raw.slice(1) : raw;
+    return (route.split(/[/?#]/)[0] || "").toLowerCase();
+  }
+
+  /** Navigate to the quiz screen (hash routing via app.js). */
   function openQuizHub() {
-    openSession();
-    setView("intro");
-    showLastSummary();
-    requestAnimationFrame(() => {
-      (els.start || els.exit)?.focus();
-    });
+    if (currentRoute() === "quiz") {
+      setView("intro");
+      showLastSummary();
+      scrollQuizTop(false);
+      requestAnimationFrame(() => els.start?.focus());
+      return;
+    }
+    location.hash = "#/quiz";
+  }
+
+  /** Leave quiz → guide and reset intro. */
+  function closeSession() {
+    resetToIntro();
+    if (currentRoute() !== "guide") {
+      location.hash = "#/guide";
+    }
   }
 
   function startQuiz() {
     index = 0;
     answers = QUESTIONS.map(() => ({ selected: null, correct: null }));
     answeredThis = false;
-    openSession();
+    if (currentRoute() !== "quiz") {
+      location.hash = "#/quiz";
+    }
     setView("active");
     renderQuestion();
     requestAnimationFrame(() => {
       els.question?.focus?.();
-      els.session?.querySelector(".quiz-drawer-body")?.scrollTo({ top: 0 });
+      scrollQuizTop(false);
     });
   }
 
@@ -461,7 +458,7 @@
       index += 1;
       renderQuestion();
       els.question.focus?.();
-      els.session?.querySelector(".quiz-drawer-body")?.scrollTo({ top: 0, behavior: "smooth" });
+      scrollQuizTop(true);
     } else {
       finishQuiz();
     }
@@ -509,125 +506,61 @@
     }
 
     setView("results");
-    els.session?.querySelector(".quiz-drawer-body")?.scrollTo({ top: 0, behavior: "smooth" });
+    scrollQuizTop(true);
   }
 
-
-  let welcomeLastFocus = null;
-
-  function markWelcomed() {
-    localStorage.setItem(KEYS.welcomed, "1");
-  }
-
-  function getWelcomeFocusables() {
-    if (!els.welcomeDialog) return [];
-    return [...els.welcomeDialog.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    )].filter((el) => !el.disabled && el.offsetParent !== null);
-  }
-
-  function hideWelcome() {
-    if (!els.welcome || els.welcome.hidden) return;
-    els.welcome.hidden = true;
-    document.body.classList.remove("quiz-welcome-open");
-    document.removeEventListener("keydown", onWelcomeKeydown, true);
-    if (welcomeLastFocus && typeof welcomeLastFocus.focus === "function") {
-      welcomeLastFocus.focus();
-    }
-  }
-
-  function onWelcomeKeydown(e) {
-    if (!els.welcome || els.welcome.hidden) return;
-    if (e.key === "Escape") {
-      e.preventDefault();
-      skipWelcome();
-      return;
-    }
-    if (e.key !== "Tab") return;
-    const focusables = getWelcomeFocusables();
-    if (focusables.length === 0) return;
-    const first = focusables[0];
-    const last = focusables[focusables.length - 1];
-    if (e.shiftKey && document.activeElement === first) {
-      e.preventDefault();
-      last.focus();
-    } else if (!e.shiftKey && document.activeElement === last) {
-      e.preventDefault();
-      first.focus();
-    }
-  }
-
-  function showWelcomePrompt() {
-    if (!els.welcome) return;
-    if (localStorage.getItem(KEYS.welcomed) === "1") return;
-    if (Number(localStorage.getItem(KEYS.attempts) || "0") > 0) {
-      markWelcomed();
-      return;
-    }
-    welcomeLastFocus = document.activeElement;
-    els.welcome.hidden = false;
-    document.body.classList.add("quiz-welcome-open");
-    document.addEventListener("keydown", onWelcomeKeydown, true);
-    // Focus primary action inside the dialog
-    requestAnimationFrame(() => {
-      (els.welcomeStart || els.welcomeDialog)?.focus();
-    });
-  }
-
-  function beginFromWelcome() {
-    markWelcomed();
-    hideWelcome();
-    startQuiz();
-  }
-
-  function skipWelcome() {
-    markWelcomed();
-    hideWelcome();
-  }
-
-  els.start?.addEventListener("click", startQuiz);
-  els.openBtn?.addEventListener("click", openQuizHub);
-  document.querySelectorAll("[data-quiz-open]").forEach((el) => {
-    el.addEventListener("click", (e) => {
-      e.preventDefault();
-      document.getElementById("backdrop")?.click();
-      openQuizHub();
-    });
-  });
-  // Screen nav / guide TOC: leaving reading flow closes the quiz drawer
-  document.querySelectorAll(".toc-link[data-screen], .guide-toc-link").forEach((el) => {
-    el.addEventListener("click", () => {
-      if (els.session && !els.session.hidden) closeSession();
-    });
-  });
-  els.next.addEventListener("click", goNext);
-  els.retake.addEventListener("click", startQuiz);
   function requestExitSession() {
-    const midQuiz = els.active && !els.active.hidden;
-    if (midQuiz) {
-      if (!confirm("Exit the quiz and return to the guide? Progress on this attempt will be lost.")) return;
+    if (isMidQuiz()) {
+      if (!confirm("Leave the quiz and return to the guide? Progress on this attempt will be lost.")) return;
     }
     closeSession();
   }
-  els.exit?.addEventListener("click", requestExitSession);
-  els.done?.addEventListener("click", closeSession);
-  window.addEventListener("keydown", (e) => {
-    if (e.key !== "Escape") return;
-    if (!els.session || els.session.hidden) return;
-    if (els.welcome && !els.welcome.hidden) return;
-    requestExitSession();
-  });
-  els.welcomeStart?.addEventListener("click", beginFromWelcome);
-  els.welcomeSkip?.addEventListener("click", skipWelcome);
-  els.welcomeClose?.addEventListener("click", skipWelcome);
-  els.welcomeBackdrop?.addEventListener("click", skipWelcome);
-  els.drawerBackdrop?.addEventListener("click", requestExitSession);
 
-  clearGuideLocks();
-  if (els.session) {
-    els.session.classList.remove("is-open");
-    els.session.hidden = true;
-  }
-  showLastSummary();
-  showWelcomePrompt();
+  // When leaving the quiz screen mid-attempt via menu / hash, confirm then reset
+  let wasOnQuiz = currentRoute() === "quiz";
+  window.addEventListener("hashchange", () => {
+    if (ignoringHash) return;
+    const onQuiz = currentRoute() === "quiz";
+    if (wasOnQuiz && !onQuiz && isMidQuiz()) {
+      const ok = confirm("Leave the quiz? Progress on this attempt will be lost.");
+      if (!ok) {
+        ignoringHash = true;
+        location.hash = "#/quiz";
+        requestAnimationFrame(() => { ignoringHash = false; });
+        wasOnQuiz = true;
+        return;
+      }
+      resetToIntro();
+    }
+    if (onQuiz && !wasOnQuiz) {
+      // Arriving at quiz screen — show intro unless already mid-quiz/results
+      if (!isMidQuiz() && !(els.results && !els.results.hidden)) {
+        setView("intro");
+        showLastSummary();
+      }
+      scrollQuizTop(false);
+    }
+    wasOnQuiz = onQuiz;
+  });
+
+  // Intercept other screen menu links while mid-quiz (before hash flips)
+  document.querySelectorAll('.toc-link[data-screen]').forEach((el) => {
+    el.addEventListener("click", (e) => {
+      if (el.dataset.screen === "quiz") return;
+      if (!isMidQuiz()) return;
+      if (!confirm("Leave the quiz? Progress on this attempt will be lost.")) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        return;
+      }
+      resetToIntro();
+    }, true);
+  });
+
+  els.start?.addEventListener("click", startQuiz);
+  els.next.addEventListener("click", goNext);
+  els.retake.addEventListener("click", startQuiz);
+  els.done?.addEventListener("click", requestExitSession);
+
+  resetToIntro();
 })();

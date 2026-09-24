@@ -248,42 +248,8 @@ a:hover { text-decoration: underline; }
   font: inherit;
   text-align: left;
 }
-.toc-link.toc-action::after {
-  content: "Drawer";
-  display: inline-block;
-  margin-left: 0.45rem;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--accent);
-  vertical-align: middle;
-}
 
 
-.sidebar-tools {
-  margin-top: 1.1rem;
-  padding-top: 0.85rem;
-  border-top: 1px solid var(--line);
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-}
-.sidebar-tools-label {
-  margin: 0 0 0.35rem;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--muted);
-}
-.sidebar-tools .toc-link {
-  width: 100%;
-  text-align: left;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-  font: inherit;
-}
 
 .sidebar-card {
   margin-top: 1.25rem;
@@ -1174,141 +1140,10 @@ h4 { margin: 0 0 0.4rem; font-size: 1rem; }
 }
 
 
-/* Knowledge check — separate drawer (not a scroll section) */
-body.quiz-drawer-open {
-  overflow: hidden;
-}
-
-
-.sidebar-tools {
-  margin: 1.1rem 0 0.25rem;
-}
-.sidebar-quiz-btn {
-  width: 100%;
-  text-align: left;
-  border: 1px solid var(--line);
-  background: var(--bg-elev);
-  color: var(--ink);
-  border-radius: 14px;
-  padding: 0.85rem 0.95rem;
-  cursor: pointer;
-  font: inherit;
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  min-height: var(--tap);
-  box-shadow: inset 3px 0 0 var(--accent);
-}
-.sidebar-quiz-btn:hover {
-  border-color: var(--accent);
-}
-.sidebar-quiz-btn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-.sidebar-quiz-title {
-  font-weight: 750;
-  font-size: 0.98rem;
-}
-.sidebar-quiz-sub {
-  font-size: 0.82rem;
-  color: var(--muted);
-}
-
-.quiz-open-btn {
-  font-weight: 650;
-}
-
-.quiz-drawer {
-  position: fixed;
-  inset: 0;
-  /* Above topbar (40) and mobile sidebar (50) so Close is always tappable */
-  z-index: 90;
-  display: flex;
-  justify-content: flex-end;
-  /* Root never captures clicks — only the dimmer + panel do */
-  pointer-events: none;
-}
-.quiz-drawer[hidden] { display: none !important; }
-
-/* Desktop: drawer starts after the TOC column so the index stays clickable */
-@media (min-width: 981px) {
-  .quiz-drawer {
-    left: max(
-      var(--sidebar),
-      calc((100vw - (var(--sidebar) + var(--max) + 6rem)) / 2 + var(--sidebar))
-    );
-  }
-}
-
-.quiz-drawer-backdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(12, 16, 22, 0.4);
-  opacity: 0;
-  transition: opacity 0.25s ease;
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
-  pointer-events: none;
-}
-.quiz-drawer.is-open .quiz-drawer-backdrop {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.quiz-drawer-panel {
-  position: relative;
-  z-index: 1;
-  width: min(100%, 440px);
-  height: 100%;
-  max-height: 100%;
-  display: flex;
-  flex-direction: column;
-  background: var(--bg);
-  border-left: 1px solid var(--line);
-  box-shadow: -16px 0 48px rgba(0, 0, 0, 0.22);
-  transform: translateX(105%);
-  transition: transform 0.28s ease;
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-right: env(safe-area-inset-right);
-  pointer-events: none;
-}
-.quiz-drawer.is-open .quiz-drawer-panel {
-  transform: translateX(0);
-  pointer-events: auto;
-}
-
-.quiz-drawer-bar {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.85rem 1rem;
-  border-bottom: 1px solid var(--line);
-  background: var(--bg-elev);
-}
-.quiz-drawer-kicker {
-  margin: 0;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-.quiz-drawer-title {
-  margin: 0.1rem 0 0;
-  font-size: 1.05rem;
-  font-weight: 750;
-}
-.quiz-drawer-exit { flex-shrink: 0; }
-.quiz-drawer-body {
-  flex: 1;
-  min-height: 0;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 1.1rem 1rem 2rem;
+/* Knowledge check — dedicated screen (#/quiz) */
+.quiz-screen-body {
+  max-width: 40rem;
+  margin: 0.25rem 0 2.5rem;
 }
 
 .quiz-intro-card {
@@ -1330,131 +1165,33 @@ body.quiz-drawer-open {
 }
 .quiz-intro-meta li { margin: 0.35rem 0; }
 .quiz-last-session { margin: 0 0 1rem; }
-.quiz-drawer .quiz-start-btn {
-  width: 100%;
-  border: 0;
-  cursor: pointer;
-  font: inherit;
-}
 
-.quiz-drawer .quiz-card {
+.quiz-card {
   background: var(--bg-elev);
   border: 1px solid var(--line);
   border-radius: 18px;
   padding: 1.1rem 1rem 1.15rem;
   box-shadow: var(--shadow);
 }
-.quiz-drawer .quiz-media { margin-bottom: 1rem; }
-.quiz-drawer .quiz-feedback p {
+.quiz-card .quiz-media { margin-bottom: 1rem; }
+.quiz-card .quiz-feedback p {
   font-size: 0.98rem;
   line-height: 1.55;
   color: var(--ink);
 }
 
-/* Phone: drawer feels like a sheet from the bottom-right, still full height */
-@media (max-width: 479px) {
-  .quiz-drawer-panel {
-    width: 100%;
-  }
-}
-
-@media (min-width: 720px) {
-  .quiz-drawer-panel {
-    width: min(100%, 480px);
-  }
-}
-
-/* First-visit quiz modal */
-.quiz-modal {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
-}
-.quiz-modal[hidden] { display: none !important; }
-body.quiz-welcome-open { overflow: hidden; }
-
-.quiz-modal-backdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(18, 22, 28, 0.58);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-}
-
+/* Neutralize any leftover drawer/modal chrome if present */
+.quiz-drawer,
+.quiz-drawer-backdrop,
+.quiz-drawer-panel,
+.quiz-modal,
+.quiz-modal-backdrop,
 .quiz-modal-dialog {
-  position: relative;
-  z-index: 1;
-  width: min(100%, 440px);
-  max-height: min(90vh, 640px);
+  display: none !important;
+}
+body.quiz-drawer-open,
+body.quiz-welcome-open {
   overflow: auto;
-  -webkit-overflow-scrolling: touch;
-  background: var(--bg-elev);
-  color: var(--ink);
-  border: 1px solid var(--line);
-  border-radius: 22px;
-  padding: 1.5rem 1.25rem 1.35rem;
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.28);
-  outline: none;
-}
-
-.quiz-modal-close {
-  position: absolute;
-  top: 0.65rem;
-  right: 0.65rem;
-  width: 44px;
-  height: 44px;
-  min-width: 44px;
-  min-height: 44px;
-  padding: 0;
-  font-size: 1.5rem;
-  line-height: 1;
-  border-radius: 50%;
-}
-
-.quiz-modal-dialog .eyebrow {
-  margin-right: 2.5rem;
-}
-
-.quiz-modal-dialog h2 {
-  margin: 0 0 0.65rem;
-  font-family: var(--serif);
-  font-size: clamp(1.35rem, 5vw, 1.7rem);
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-  padding-right: 1.5rem;
-}
-
-.quiz-welcome-text {
-  margin: 0 0 1.2rem;
-  color: var(--muted);
-  font-size: 0.98rem;
-}
-
-.quiz-welcome-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
-}
-
-.quiz-welcome-actions .primary-btn,
-.quiz-welcome-actions .secondary-btn {
-  width: 100%;
-}
-
-@media (min-width: 480px) {
-  .quiz-welcome-actions {
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-  .quiz-welcome-actions .primary-btn,
-  .quiz-welcome-actions .secondary-btn {
-    width: auto;
-    flex: 1;
-  }
 }
 
 .tip-cards {
