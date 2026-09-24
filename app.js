@@ -6,7 +6,13 @@
   const themeToggle = document.getElementById("themeToggle");
   const progressBar = document.getElementById("progressBar");
   const tocLinks = [...document.querySelectorAll(".toc-link")];
-  const sections = tocLinks
+  // Only real chapter anchors participate in scroll-spy / section index.
+  // Drawer actions (e.g. Knowledge check) stay in the menu but have no page section.
+  const sectionLinks = tocLinks.filter((el) => {
+    const href = el.getAttribute("href") || "";
+    return href.startsWith("#") && href.length > 1;
+  });
+  const sections = sectionLinks
     .map((a) => document.querySelector(a.getAttribute("href")))
     .filter(Boolean);
 
@@ -56,7 +62,7 @@
     for (const section of sections) {
       if (section.getBoundingClientRect().top <= 120) current = section;
     }
-    tocLinks.forEach((link) => {
+    sectionLinks.forEach((link) => {
       const match = link.getAttribute("href") === "#" + current.id;
       link.classList.toggle("active", match);
     });

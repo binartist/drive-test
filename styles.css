@@ -214,6 +214,29 @@ a:hover { text-decoration: underline; }
   color: var(--ink);
   box-shadow: inset 3px 0 0 var(--accent);
 }
+
+.toc-link.toc-action {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+.toc-link.toc-action::after {
+  content: "Drawer";
+  display: inline-block;
+  margin-left: 0.45rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent);
+  vertical-align: middle;
+}
+
 .sidebar-card {
   margin-top: 1.25rem;
   padding: 1rem;
