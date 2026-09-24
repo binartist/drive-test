@@ -143,6 +143,9 @@
     scoreMsg: document.getElementById("quizScoreMsg"),
     review: document.getElementById("quizReview"),
     retake: document.getElementById("quizRetake"),
+    session: document.getElementById("quizSession"),
+    exit: document.getElementById("quizExit"),
+    done: document.getElementById("quizDone"),
     welcome: document.getElementById("quizWelcome"),
     welcomeDialog: document.querySelector("#quizWelcome .quiz-modal-dialog"),
     welcomeBackdrop: document.getElementById("quizWelcomeBackdrop"),
@@ -242,18 +245,37 @@
   }
 
   function setView(view) {
-    els.intro.hidden = view !== "intro";
+    if (els.intro) els.intro.hidden = view !== "intro";
     els.active.hidden = view !== "active";
     els.results.hidden = view !== "results";
+  }
+
+  function openSession() {
+    if (!els.session) return;
+    els.session.hidden = false;
+    document.body.classList.add("quiz-session-open");
+  }
+
+  function closeSession() {
+    if (!els.session) return;
+    els.session.hidden = true;
+    document.body.classList.remove("quiz-session-open");
+    setView("intro");
+    showLastSummary();
+    const section = document.getElementById("quiz");
+    section?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   function startQuiz() {
     index = 0;
     answers = QUESTIONS.map(() => ({ selected: null, correct: null }));
     answeredThis = false;
+    openSession();
     setView("active");
     renderQuestion();
-    els.active?.scrollIntoView({ behavior: "smooth", block: "start" });
+    requestAnimationFrame(() => {
+      els.question?.focus?.();
+    });
   }
 
   function renderQuestion() {
@@ -284,25 +306,37 @@
 
     els.options.innerHTML = "";
     if (q.type === "yn") {
-      const yes = makeOptionButton("Yes", true, 0);
-      const no = makeOptionButton("No", false, 1);
+      const yes = makeOptionButton("Yes", true, 0, "Y");
+      const no = makeOptionButton("No", false, 1, "N");
+      yes.classList.add("is-yes");
+      no.classList.add("is-no");
       els.options.append(yes, no);
       els.options.classList.add("quiz-options-yn");
     } else {
       els.options.classList.remove("quiz-options-yn");
+      const letters = ["A", "B", "C", "D", "E", "F"];
       q.options.forEach((label, i) => {
-        els.options.append(makeOptionButton(label, i, i));
+        els.options.append(makeOptionButton(label, i, i, letters[i] || String(i + 1)));
       });
     }
   }
 
-  function makeOptionButton(label, value, optionIndex) {
+  function makeOptionButton(label, value, optionIndex, keyLabel) {
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "quiz-option";
-    btn.textContent = label;
     btn.dataset.value = String(value);
-    btn.setAttribute("aria-pressed", "false");
+    btn.setAttribute("role", "radio");
+    btn.setAttribute("aria-checked", "false");
+    const key = document.createElement("span");
+    key.className = "quiz-option-key";
+    key.setAttribute("aria-hidden", "true");
+    key.textContent = keyLabel;
+    const text = document.createElement("span");
+    text.className = "quiz-option-label";
+    text.textContent = label;
+    btn.append(key, text);
+    btn.setAttribute("aria-label", keyLabel + ". " + label);
     btn.addEventListener("click", () => onSelect(value, btn));
     return btn;
   }
@@ -327,13 +361,13 @@
         q.type === "yn" ? bVal === q.correct : bVal === q.correct;
       if (isRight) {
         b.classList.add("is-correct");
-        b.setAttribute("aria-pressed", isThis ? "true" : "false");
+        b.setAttribute("aria-checked", isThis || isRight ? "true" : "false");
       }
       if (isThis && !isCorrect) {
         b.classList.add("is-wrong");
-        b.setAttribute("aria-pressed", "true");
+        b.setAttribute("aria-checked", "true");
       }
-      if (isThis) b.setAttribute("aria-pressed", "true");
+      if (isThis) b.setAttribute("aria-checked", "true");
     });
 
     els.feedback.hidden = false;
@@ -354,7 +388,7 @@
       index += 1;
       renderQuestion();
       els.question.focus?.();
-      els.active?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      els.session?.querySelector(".quiz-session-body")?.scrollTo({ top: 0, behavior: "smooth" });
     } else {
       finishQuiz();
     }
@@ -402,7 +436,7 @@
     }
 
     setView("results");
-    els.results?.scrollIntoView({ behavior: "smooth", block: "start" });
+    els.session?.querySelector(".quiz-session-body")?.scrollTo({ top: 0, behavior: "smooth" });
   }
 
 
@@ -470,8 +504,6 @@
   function beginFromWelcome() {
     markWelcomed();
     hideWelcome();
-    const section = document.getElementById("quiz");
-    section?.scrollIntoView({ behavior: "smooth", block: "start" });
     startQuiz();
   }
 
@@ -483,6 +515,16 @@
   els.start.addEventListener("click", startQuiz);
   els.next.addEventListener("click", goNext);
   els.retake.addEventListener("click", startQuiz);
+  els.exit?.addEventListener("click", () => {
+    if (confirm("Exit the quiz and return to the guide?")) closeSession();
+  });
+  els.done?.addEventListener("click", closeSession);
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && els.session && !els.session.hidden && (!els.welcome || els.welcome.hidden)) {
+      // don't steal Escape from welcome modal
+      if (confirm("Exit the quiz and return to the guide?")) closeSession();
+    }
+  });
   els.welcomeStart?.addEventListener("click", beginFromWelcome);
   els.welcomeSkip?.addEventListener("click", skipWelcome);
   els.welcomeClose?.addEventListener("click", skipWelcome);
