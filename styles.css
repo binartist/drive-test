@@ -288,72 +288,70 @@ a:hover { text-decoration: underline; }
 .screen.is-active { display: block; }
 .screen[hidden] { display: none !important; }
 
-/* —— Guide sticky collapsible TOC —— */
-.guide-toc {
-  position: sticky;
-  top: calc(var(--topbar-h) + env(safe-area-inset-top));
-  z-index: 30;
-  margin: 0 0 1rem;
-  background: var(--bg-elev);
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  box-shadow: var(--shadow);
-  overflow: hidden;
+/* —— Guide contents icon + popover (header) —— */
+.toc-popover-wrap {
+  position: relative;
 }
-.guide-toc-toggle {
-  appearance: none;
-  -webkit-appearance: none;
-  width: 100%;
+.toc-popover-wrap[hidden] { display: none !important; }
+.toc-icon-btn {
+  width: var(--tap);
+  min-width: var(--tap);
+  padding: 0;
+  border-radius: 12px;
+}
+.toc-icon {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  min-height: var(--tap);
-  padding: 0.7rem 1rem;
-  border: 0;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  width: 18px;
+}
+.toc-icon span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  border-radius: 2px;
+  background: currentColor;
+}
+.toc-icon span:nth-child(2) { width: 75%; }
+.toc-icon span:nth-child(3) { width: 90%; }
+.toc-popover {
+  position: absolute;
+  top: calc(100% + 0.45rem);
+  right: 0;
+  z-index: 80;
+  width: min(18.5rem, calc(100vw - 1.5rem));
+  max-height: min(70vh, 28rem);
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
   background: var(--bg-elev);
   color: var(--ink);
-  font: inherit;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 16px 40px rgba(28, 36, 48, 0.18);
+  padding: 0.65rem 0.55rem 0.7rem;
+}
+.toc-popover[hidden] { display: none !important; }
+.toc-popover-title {
+  margin: 0 0.45rem 0.4rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  font-size: 0.95rem;
-  cursor: pointer;
-  text-align: left;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
-.guide-toc-toggle:hover { background: color-mix(in srgb, var(--accent-soft) 55%, var(--bg-elev)); }
-.guide-toc-toggle:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: -2px;
-}
-.guide-toc-chevron {
-  width: 0.55rem;
-  height: 0.55rem;
-  border-right: 2px solid var(--muted);
-  border-bottom: 2px solid var(--muted);
-  transform: rotate(45deg);
-  transition: transform 0.18s ease;
-  flex-shrink: 0;
-  margin-top: -0.2rem;
-}
-.guide-toc.is-collapsed .guide-toc-chevron {
-  transform: rotate(-135deg);
-  margin-top: 0.2rem;
-}
-.guide-toc-panel {
+.toc-popover-nav {
   display: flex;
   flex-direction: column;
   gap: 0.1rem;
-  padding: 0 0.55rem 0.65rem;
-  border-top: 1px solid var(--line);
-  background: var(--bg-elev);
 }
-.guide-toc-panel[hidden] { display: none !important; }
 .guide-toc-link {
   text-decoration: none;
   color: var(--muted);
-  padding: 0.55rem 0.7rem;
+  padding: 0.65rem 0.75rem;
   border-radius: 10px;
-  font-size: 0.92rem;
-  min-height: 2.5rem;
+  font-size: 0.95rem;
+  min-height: var(--tap);
   display: flex;
   align-items: center;
 }
@@ -364,16 +362,9 @@ a:hover { text-decoration: underline; }
   box-shadow: inset 3px 0 0 var(--accent);
 }
 
-.toc-link.is-active {
-  background: var(--bg-elev);
-  color: var(--ink);
-  box-shadow: inset 3px 0 0 var(--accent);
-}
-
-/* Chapters inside guide need extra scroll margin under sticky TOC */
 #screen-guide .hero,
 #screen-guide .chapter {
-  scroll-margin-top: calc(var(--topbar-h) + env(safe-area-inset-top) + 4.5rem);
+  scroll-margin-top: calc(var(--topbar-h) + env(safe-area-inset-top) + 0.75rem);
 }
 
 /* —— Hero —— */
@@ -797,7 +788,7 @@ h4 { margin: 0 0 0.4rem; font-size: 1rem; }
 }
 
 @media print {
-  .topbar, .sidebar, .guide-toc, .hero-actions, .video-frame, .ghost-btn, .backdrop { display: none !important; }
+  .topbar, .sidebar, .toc-popover, .hero-actions, .video-frame, .ghost-btn, .backdrop { display: none !important; }
   .shell { display: block; }
   .screen, .screen[hidden] { display: block !important; }
   .chapter { break-inside: avoid; }

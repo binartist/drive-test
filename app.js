@@ -86,6 +86,8 @@
     if (name !== "guide" && progressBar) progressBar.style.width = "0%";
     if (scrollTop) window.scrollTo({ top: 0, behavior: "auto" });
     updateProgress();
+    // syncTocButton defined later; called from onHashChange end and after TOC setup
+    document.dispatchEvent(new CustomEvent("nz-screen-change", { detail: { screen: name } }));
   }
 
   function goScreen(name, { replace = false, scrollTop = true } = {}) {
@@ -133,23 +135,45 @@
     });
   });
 
-  // —— Guide sticky TOC (collapsible) ——
-  const tocToggle = document.getElementById("guideTocToggle");
-  const tocPanel = document.getElementById("guideTocPanel");
-  const guideToc = document.getElementById("guideToc");
+  // —— Guide contents popover (header) ——
+  const tocWrap = document.getElementById("tocPopoverWrap");
+  const tocOpen = document.getElementById("tocOpen");
+  const tocPopover = document.getElementById("tocPopover");
   const guideTocLinks = [...document.querySelectorAll(".guide-toc-link")];
 
-  function setTocOpen(open) {
-    if (!guideToc || !tocToggle || !tocPanel) return;
-    guideToc.classList.toggle("is-collapsed", !open);
-    tocToggle.setAttribute("aria-expanded", open ? "true" : "false");
-    if (open) tocPanel.removeAttribute("hidden");
-    else tocPanel.setAttribute("hidden", "");
+  function setTocPopover(open) {
+    if (!tocOpen || !tocPopover) return;
+    tocOpen.setAttribute("aria-expanded", open ? "true" : "false");
+    tocWrap?.classList.toggle("is-open", open);
+    if (open) tocPopover.removeAttribute("hidden");
+    else tocPopover.setAttribute("hidden", "");
   }
-  setTocOpen(true);
-  tocToggle?.addEventListener("click", () => {
-    const open = tocToggle.getAttribute("aria-expanded") !== "true";
-    setTocOpen(open);
+
+  function syncTocButton() {
+    if (!tocWrap) return;
+    const onGuide = currentScreen === "guide";
+    if (onGuide) tocWrap.removeAttribute("hidden");
+    else {
+      tocWrap.setAttribute("hidden", "");
+      setTocPopover(false);
+    }
+  }
+
+  document.addEventListener("nz-screen-change", syncTocButton);
+  syncTocButton();
+
+  tocOpen?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const open = tocOpen.getAttribute("aria-expanded") !== "true";
+    setTocPopover(open);
+  });
+  document.addEventListener("click", (e) => {
+    if (!tocWrap || tocPopover?.hasAttribute("hidden")) return;
+    if (tocWrap.contains(e.target)) return;
+    setTocPopover(false);
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") setTocPopover(false);
   });
 
   guideTocLinks.forEach((link) => {
@@ -158,11 +182,10 @@
       const id = (link.getAttribute("href") || "").replace(/^#/, "");
       const target = document.getElementById(id);
       if (!target) return;
+      setTocPopover(false);
       if (currentScreen !== "guide") {
         showScreen("guide", { scrollTop: false });
-        history.replaceState(null, "", "#/guide");
       }
-      // Keep chapter fragment for deep-link share while route stays guide
       history.replaceState(null, "", "#/guide");
       requestAnimationFrame(() => {
         target.scrollIntoView({ behavior: "smooth", block: "start" });
