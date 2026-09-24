@@ -375,58 +375,37 @@
     index = 0;
     answers = QUESTIONS.map(() => ({ selected: null, correct: null }));
     answeredThis = false;
-    setView("active");
-    renderQuestion();
-    // Push session onto hub so Back / history can pop to intro.
+    // Push session hash first so app chrome can key off the route, then show questions.
     if (currentRoute() !== "quiz") {
       ignoringHash = true;
       history.replaceState(null, "", "#/quiz");
       ignoringHash = false;
     }
-    goQuizHash("session", { replace: quizSub() === "results" });
+    const fromResults = quizSub() === "results";
+    goQuizHash("session", { replace: fromResults });
+    setView("active");
+    renderQuestion();
+    syncQuizChrome("active");
     requestAnimationFrame(() => {
+      syncQuizChrome("active");
       els.question?.focus?.();
       scrollQuizTop(false);
     });
   }
 
-  /** Header Back / Escape while nested in quiz. */
+  /** Header Back / Escape while nested in quiz — pop to Knowledge check hub. */
   function popQuizNested() {
     if (isMidQuiz()) {
       if (!confirm("Leave the quiz? Progress on this attempt will be lost.")) return;
-      // Prefer history.back when we pushed session from hub.
-      if (quizSub() === "session") {
-        ignoringHash = true;
-        resetToIntro({ updateHash: false });
-        history.back();
-        requestAnimationFrame(() => {
-          if (quizSub() !== "" && currentRoute() === "quiz") {
-            history.replaceState(null, "", "#/quiz");
-          }
-          ignoringHash = false;
-          syncQuizChrome("intro");
-        });
-        return;
-      }
-      resetToIntro({ updateHash: true });
+    } else if (!isResultsView()) {
       return;
     }
-    if (isResultsView()) {
-      if (quizSub() === "results") {
-        ignoringHash = true;
-        resetToIntro({ updateHash: false });
-        history.back();
-        requestAnimationFrame(() => {
-          if (currentRoute() === "quiz" && quizSub() !== "") {
-            history.replaceState(null, "", "#/quiz");
-          }
-          ignoringHash = false;
-          syncQuizChrome("intro");
-        });
-        return;
-      }
-      resetToIntro({ updateHash: true });
-    }
+    ignoringHash = true;
+    resetToIntro({ updateHash: false });
+    history.replaceState(null, "", "#/quiz");
+    ignoringHash = false;
+    syncQuizChrome("intro");
+    scrollQuizTop(false);
   }
 
   function renderQuestion() {

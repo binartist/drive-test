@@ -18,7 +18,6 @@
     settings: "Settings",
   };
   const screenTitle = document.getElementById("screenTitle");
-  const navBack = document.getElementById("navBack");
   let currentScreen = "guide";
   /** Last primary screen under a pushed secondary (for Back when history cannot pop). */
   let stackBase = "guide";
@@ -27,43 +26,74 @@
   let nestedMode = false;
   let nestedTitle = null;
 
+  const MENU_ICON_HTML =
+    '<span class="drawer-icon" aria-hidden="true"><span></span><span></span><span></span></span>';
+  const BACK_ICON_HTML =
+    '<svg class="back-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
+    '<path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"/>' +
+    "</svg>";
+
   function isSecondary(name) {
     return SCREENS.includes(name) && !PRIMARY_SCREENS.includes(name);
+  }
+
+  function quizNestedFromHash() {
+    const raw = (location.hash || "").replace(/^#/, "");
+    const route = raw.startsWith("/") ? raw.slice(1) : raw;
+    const parts = route.split(/[/?#]/).filter(Boolean);
+    if ((parts[0] || "").toLowerCase() !== "quiz") return false;
+    const sub = (parts[1] || "").toLowerCase();
+    return sub === "session" || sub === "results";
   }
 
   function setNestedMode(on, { title = null } = {}) {
     nestedMode = !!on;
     nestedTitle = nestedMode ? title : null;
     syncNavChrome(currentScreen);
-    if (screenTitle) {
-      if (nestedMode && nestedTitle) screenTitle.textContent = nestedTitle;
-      else screenTitle.textContent = SCREEN_TITLES[currentScreen] || "Guide";
-    }
+  }
+
+  function leadingIsBack() {
+    return isSecondary(currentScreen) || nestedMode || quizNestedFromHash();
   }
 
   function syncNavChrome(name) {
+    // Hash is source of truth for quiz session/results so chrome can't drift.
+    if (name === "quiz") {
+      if (quizNestedFromHash()) nestedMode = true;
+    } else {
+      nestedMode = false;
+      nestedTitle = null;
+    }
     const secondary = isSecondary(name) || nestedMode;
     document.body.classList.toggle("is-secondary", secondary);
     if (navOpen) {
+      navOpen.removeAttribute("hidden");
       if (secondary) {
-        navOpen.setAttribute("hidden", "");
-        navOpen.setAttribute("aria-expanded", "false");
+        navOpen.classList.add("is-back");
+        navOpen.dataset.mode = "back";
+        navOpen.setAttribute("aria-label", "Back");
+        navOpen.removeAttribute("aria-controls");
+        navOpen.removeAttribute("aria-expanded");
+        navOpen.innerHTML = BACK_ICON_HTML;
+        closeNav();
       } else {
-        navOpen.removeAttribute("hidden");
+        navOpen.classList.remove("is-back");
+        navOpen.dataset.mode = "menu";
+        navOpen.setAttribute("aria-label", "Open menu");
+        navOpen.setAttribute("aria-controls", "sidebar");
+        navOpen.setAttribute("aria-expanded", sidebar?.classList.contains("open") ? "true" : "false");
+        navOpen.innerHTML = MENU_ICON_HTML;
       }
     }
-    if (navBack) {
-      if (secondary) {
-        navBack.removeAttribute("hidden");
-        navBack.setAttribute(
-          "aria-label",
-          nestedMode ? "Back" : "Back"
-        );
+    if (screenTitle) {
+      if (secondary && name === "quiz" && nestedTitle) {
+        screenTitle.textContent = nestedTitle;
+      } else if (secondary && name === "quiz") {
+        screenTitle.textContent = SCREEN_TITLES.quiz;
       } else {
-        navBack.setAttribute("hidden", "");
+        screenTitle.textContent = SCREEN_TITLES[name] || "Guide";
       }
     }
-    if (secondary) closeNav();
   }
 
   document.addEventListener("nz-set-nested", (e) => {
@@ -106,18 +136,19 @@
     navOpen?.setAttribute("aria-expanded", "true");
   }
   navOpen?.addEventListener("click", () => {
+    if (leadingIsBack()) {
+      popSecondary();
+      return;
+    }
     if (sidebar?.classList.contains("open")) closeNav();
     else openNav();
   });
   const navClose = document.getElementById("navClose");
   backdrop?.addEventListener("click", closeNav);
   navClose?.addEventListener("click", closeNav);
-  navBack?.addEventListener("click", () => {
-    popSecondary();
-  });
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
-      if (nestedMode || isSecondary(currentScreen)) {
+      if (leadingIsBack()) {
         popSecondary();
         return;
       }
@@ -138,15 +169,10 @@
 
   function showScreen(name, { scrollTop = true } = {}) {
     if (!SCREENS.includes(name)) name = "guide";
-    const leftQuiz = currentScreen === "quiz" && name !== "quiz";
     currentScreen = name;
     if (!isSecondary(name)) {
       stackBase = name;
       secondaryPushed = false;
-    }
-    if (name !== "quiz" || leftQuiz) {
-      // Leaving quiz clears in-quiz nest; quiz.js re-asserts if still on a session hash.
-      if (name !== "quiz") nestedMode = false;
     }
     screens.forEach((el) => {
       const on = el.dataset.screen === name;
@@ -159,13 +185,6 @@
       link.classList.toggle("is-active", match);
       link.classList.toggle("active", match);
     });
-    if (screenTitle) {
-      if (nestedMode && nestedTitle && name === "quiz") {
-        screenTitle.textContent = nestedTitle;
-      } else {
-        screenTitle.textContent = SCREEN_TITLES[name] || "Guide";
-      }
-    }
     syncNavChrome(name);
     if (progressWrap) {
       progressWrap.hidden = name !== "guide";
@@ -203,7 +222,7 @@
   }
 
   function popSecondary() {
-    if (nestedMode) {
+    if (nestedMode || quizNestedFromHash()) {
       document.dispatchEvent(new CustomEvent("nz-nav-back", { detail: { screen: currentScreen } }));
       return;
     }
