@@ -154,7 +154,8 @@
     results: document.getElementById("quizResults"),
     start: document.getElementById("quizStart"),
     openBtn: document.getElementById("quizOpen"),
-    lastSession: document.getElementById("quizLastSession"),
+    drawerBackdrop: document.getElementById("quizDrawerBackdrop"),
+    lastSession: null,
     progressLabel: document.getElementById("quizProgressLabel"),
     progressFill: document.getElementById("quizProgressFill"),
     media: document.getElementById("quizMedia"),
@@ -300,12 +301,9 @@
   }
 
   function setGuideInert(on) {
-    const nodes = [
-      document.querySelector(".topbar"),
-      document.querySelector(".shell"),
-      document.querySelector(".backdrop"),
-    ];
-    nodes.forEach((node) => {
+    const root = document.querySelector(".shell");
+    const top = document.querySelector(".topbar");
+    [root, top].forEach((node) => {
       if (!node) return;
       if (on) {
         node.setAttribute("inert", "");
@@ -320,30 +318,29 @@
   function openSession() {
     if (!els.session) return;
     els.session.hidden = false;
-    document.body.classList.add("quiz-session-open");
+    // force reflow so CSS transition runs
+    void els.session.offsetWidth;
+    els.session.classList.add("is-open");
+    document.body.classList.add("quiz-drawer-open");
     setGuideInert(true);
-    // Isolate URL without scrolling the guide underneath
-    if (location.hash !== "#quiz") {
-      history.replaceState(null, "", "#quiz");
-    }
   }
 
   function closeSession() {
     if (!els.session) return;
-    els.session.hidden = true;
-    document.body.classList.remove("quiz-session-open");
+    els.session.classList.remove("is-open");
+    document.body.classList.remove("quiz-drawer-open");
     setGuideInert(false);
     setView("intro");
     showLastSummary();
-    const section = document.getElementById("quiz");
-    if (location.hash === "#quiz") {
-      history.replaceState(null, "", " ");
-      history.replaceState(null, "", "#quiz");
-    }
-    section?.scrollIntoView({ behavior: "smooth", block: "start" });
+    // Wait for drawer slide-out, then hide
+    window.setTimeout(() => {
+      if (!els.session.classList.contains("is-open")) {
+        els.session.hidden = true;
+      }
+    }, 280);
   }
 
-  /** Open the isolated quiz screen (intro hub), without starting questions yet. */
+  /** Open the knowledge-check drawer (intro), not a page scroll target. */
   function openQuizHub() {
     openSession();
     setView("intro");
@@ -362,7 +359,7 @@
     renderQuestion();
     requestAnimationFrame(() => {
       els.question?.focus?.();
-      els.session?.querySelector(".quiz-session-body")?.scrollTo({ top: 0 });
+      els.session?.querySelector(".quiz-drawer-body")?.scrollTo({ top: 0 });
     });
   }
 
@@ -476,7 +473,7 @@
       index += 1;
       renderQuestion();
       els.question.focus?.();
-      els.session?.querySelector(".quiz-session-body")?.scrollTo({ top: 0, behavior: "smooth" });
+      els.session?.querySelector(".quiz-drawer-body")?.scrollTo({ top: 0, behavior: "smooth" });
     } else {
       finishQuiz();
     }
@@ -524,7 +521,7 @@
     }
 
     setView("results");
-    els.session?.querySelector(".quiz-session-body")?.scrollTo({ top: 0, behavior: "smooth" });
+    els.session?.querySelector(".quiz-drawer-body")?.scrollTo({ top: 0, behavior: "smooth" });
   }
 
 
@@ -610,16 +607,6 @@
       openQuizHub();
     });
   });
-  window.addEventListener("hashchange", () => {
-    if (location.hash === "#quiz" && els.session?.hidden) openQuizHub();
-  });
-  if (location.hash === "#quiz") {
-    // Defer so welcome modal can decide first
-    setTimeout(() => {
-      if (els.welcome && !els.welcome.hidden) return;
-      if (els.session?.hidden) openQuizHub();
-    }, 0);
-  }
   els.next.addEventListener("click", goNext);
   els.retake.addEventListener("click", startQuiz);
   function requestExitSession() {
@@ -641,6 +628,7 @@
   els.welcomeSkip?.addEventListener("click", skipWelcome);
   els.welcomeClose?.addEventListener("click", skipWelcome);
   els.welcomeBackdrop?.addEventListener("click", skipWelcome);
+  els.drawerBackdrop?.addEventListener("click", requestExitSession);
 
   showLastSummary();
   showWelcomePrompt();

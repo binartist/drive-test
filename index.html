@@ -23,6 +23,7 @@
       </div>
       <div class="topbar-actions">
         <button type="button" class="ghost-btn" id="themeToggle" aria-label="Toggle dark mode">Theme</button>
+        <button type="button" class="ghost-btn quiz-open-btn" id="quizOpenTop" data-quiz-open aria-haspopup="dialog" aria-controls="quizSession">Quiz</button>
         <button type="button" class="ghost-btn nav-open" id="navOpen" aria-controls="sidebar" aria-expanded="false">Menu</button>
       </div>
     </div>
@@ -45,9 +46,15 @@
         <a href="#petrol" class="toc-link" data-section="petrol">6. Filling petrol</a>
         <a href="#tips" class="toc-link" data-section="tips">Practical tips</a>
         <a href="#playlist" class="toc-link" data-section="playlist">Video playlist</a>
-        <a href="#quiz" class="toc-link" data-section="quiz" data-quiz-open>Knowledge check</a>
         <a href="#checklist" class="toc-link" data-section="checklist">Trip checklist</a>
       </nav>
+      <div class="sidebar-tools">
+        <p class="sidebar-label">Practice</p>
+        <button type="button" class="sidebar-quiz-btn" id="quizOpenSide" data-quiz-open aria-haspopup="dialog" aria-controls="quizSession">
+          <span class="sidebar-quiz-title">Knowledge check</span>
+          <span class="sidebar-quiz-sub">Opens in a separate drawer</span>
+        </button>
+      </div>
       <div class="sidebar-card">
         <p class="sidebar-card-title">Watch first</p>
         <p class="sidebar-card-text">10 minutes with NZ Police before you pick up the keys.</p>
@@ -64,7 +71,7 @@
         <p class="lede">A reading-friendly guide for your first week on North Island roads. Short chapters, real NZ photos, clear diagrams, and curated videos.</p>
         <div class="hero-actions">
           <a class="primary-btn" href="#drive">Start chapter 1</a>
-          <a class="secondary-btn" href="#quiz" data-quiz-open>Knowledge check</a>
+          <button type="button" class="secondary-btn" data-quiz-open aria-haspopup="dialog" aria-controls="quizSession">Knowledge check</button>
         </div>
         <ul class="stat-row">
           <li><strong>6</strong><span>chapters</span></li>
@@ -706,19 +713,6 @@
       </section>
 
 
-      <!-- QUIZ launch (session is fullscreen, isolated) -->
-      <section class="chapter quiz-launch" id="quiz" data-chapter="quiz">
-        <header class="chapter-head">
-          <p class="chapter-num">Practice</p>
-          <h2>Knowledge check</h2>
-          <p class="chapter-summary">Opens in its own full-screen session — away from the guide — so you can focus on each question.</p>
-        </header>
-        <div class="quiz-launch-card">
-          <p>Multiple choice and yes/no on left-side driving, roundabouts, signs, parking, and petrol. Score stays in this browser only.</p>
-          <div class="quiz-last" id="quizLast" hidden></div>
-          <button type="button" class="primary-btn quiz-start-btn" id="quizOpen">Open knowledge check</button>
-        </div>
-      </section>
 
       <!-- CHECKLIST -->
       <section class="chapter" id="checklist" data-chapter="checklist">
@@ -754,17 +748,18 @@
 
   
   
-  <div class="quiz-session" id="quizSession" hidden role="dialog" aria-modal="true" aria-labelledby="quizSessionTitle">
-    <div class="quiz-session-panel">
-      <header class="quiz-session-bar">
-        <div class="quiz-session-brand">
-          <p class="quiz-session-kicker">Knowledge check</p>
-          <h2 class="quiz-session-title" id="quizSessionTitle">Focused practice</h2>
+  <div class="quiz-drawer" id="quizSession" hidden>
+    <div class="quiz-drawer-backdrop" id="quizDrawerBackdrop" tabindex="-1"></div>
+    <div class="quiz-drawer-panel" role="dialog" aria-modal="true" aria-labelledby="quizSessionTitle">
+      <header class="quiz-drawer-bar">
+        <div class="quiz-drawer-brand">
+          <p class="quiz-drawer-kicker">Knowledge check</p>
+          <h2 class="quiz-drawer-title" id="quizSessionTitle">Focused practice</h2>
         </div>
-        <button type="button" class="ghost-btn quiz-session-exit" id="quizExit">Exit to guide</button>
+        <button type="button" class="ghost-btn quiz-drawer-exit" id="quizExit">Close</button>
       </header>
 
-      <div class="quiz-session-body">
+      <div class="quiz-drawer-body">
         <div class="quiz-intro" id="quizIntro">
           <div class="quiz-intro-card">
             <p class="quiz-intro-lead">This session is separate from the reading guide. One question at a time, with a short explanation after each answer.</p>
@@ -773,7 +768,7 @@
               <li>Illustrations when they help</li>
               <li>Results saved only on this device</li>
             </ul>
-            <div class="quiz-last quiz-last-session" id="quizLastSession" hidden></div>
+            <div class="quiz-last quiz-last-session" id="quizLast" hidden></div>
             <button type="button" class="primary-btn quiz-start-btn" id="quizStart">Start quiz</button>
           </div>
         </div>
