@@ -401,8 +401,8 @@
       return;
     }
     ignoringHash = true;
-    resetToIntro({ updateHash: false });
     history.replaceState(null, "", "#/quiz");
+    resetToIntro({ updateHash: false });
     ignoringHash = false;
     syncQuizChrome("intro");
     scrollQuizTop(false);

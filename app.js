@@ -57,14 +57,12 @@
   }
 
   function syncNavChrome(name) {
-    // Hash is source of truth for quiz session/results so chrome can't drift.
-    if (name === "quiz") {
-      if (quizNestedFromHash()) nestedMode = true;
-    } else {
+    if (name !== "quiz") {
       nestedMode = false;
       nestedTitle = null;
     }
-    const secondary = isSecondary(name) || nestedMode;
+    // Flag from quiz.js OR hash sub-route — either is enough to show Back.
+    const secondary = isSecondary(name) || nestedMode || (name === "quiz" && quizNestedFromHash());
     document.body.classList.toggle("is-secondary", secondary);
     if (navOpen) {
       navOpen.removeAttribute("hidden");
