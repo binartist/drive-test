@@ -201,6 +201,16 @@ a:hover { text-decoration: underline; }
   border-right: 1px solid var(--line);
   overflow: auto;
   -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
+}
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
 }
 .sidebar.open { transform: translateX(0); }
 .sidebar-head {
@@ -783,6 +793,7 @@ h4 { margin: 0 0 0.4rem; font-size: 1rem; }
     left: auto;
     bottom: auto;
     width: auto;
+    min-height: calc(100vh - 6rem);
     max-height: calc(100vh - 6rem);
     transform: none;
     border-right: none;
