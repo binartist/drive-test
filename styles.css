@@ -248,18 +248,6 @@ a:hover { text-decoration: underline; }
   box-shadow: inset 3px 0 0 var(--accent);
 }
 
-.toc-link.toc-action {
-  appearance: none;
-  -webkit-appearance: none;
-  width: 100%;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-  font: inherit;
-  text-align: left;
-}
-
-
 
 .sidebar-card {
   margin-top: 1.25rem;
@@ -1304,4 +1292,12 @@ body.quiz-welcome-open {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
   border-radius: 8px;
+}
+
+/* Guard: never show old App/Drawer chrome */
+.sidebar-tools,
+.sidebar-tools-label,
+.toc-link.toc-action::after {
+  display: none !important;
+  content: none !important;
 }
