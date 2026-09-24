@@ -1036,12 +1036,6 @@ h4 { margin: 0 0 0.4rem; font-size: 1rem; }
 body.quiz-drawer-open {
   overflow: hidden;
 }
-body.quiz-drawer-open .topbar {
-  z-index: 70;
-}
-body.quiz-drawer-open .sidebar {
-  z-index: 75;
-}
 
 
 .sidebar-tools {
@@ -1086,22 +1080,22 @@ body.quiz-drawer-open .sidebar {
 .quiz-drawer {
   position: fixed;
   inset: 0;
-  z-index: 60;
+  /* Above topbar (40) and mobile sidebar (50) so Close is always tappable */
+  z-index: 90;
   display: flex;
   justify-content: flex-end;
+  /* Root never captures clicks — only the dimmer + panel do */
   pointer-events: none;
 }
 .quiz-drawer[hidden] { display: none !important; }
-.quiz-drawer.is-open { pointer-events: auto; }
 
-/* Desktop: leave the sticky TOC visible on the left */
+/* Desktop: drawer starts after the TOC column so the index stays clickable */
 @media (min-width: 981px) {
   .quiz-drawer {
-    left: max(0px, calc((100vw - (var(--sidebar) + var(--max) + 6rem)) / 2 + var(--sidebar) + 1.25rem));
-  }
-  body.quiz-drawer-open .sidebar {
-    z-index: 70;
-    pointer-events: auto;
+    left: max(
+      var(--sidebar),
+      calc((100vw - (var(--sidebar) + var(--max) + 6rem)) / 2 + var(--sidebar))
+    );
   }
 }
 
@@ -1113,8 +1107,12 @@ body.quiz-drawer-open .sidebar {
   transition: opacity 0.25s ease;
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
+  pointer-events: none;
 }
-.quiz-drawer.is-open .quiz-drawer-backdrop { opacity: 1; }
+.quiz-drawer.is-open .quiz-drawer-backdrop {
+  opacity: 1;
+  pointer-events: auto;
+}
 
 .quiz-drawer-panel {
   position: relative;
@@ -1132,9 +1130,11 @@ body.quiz-drawer-open .sidebar {
   padding-top: env(safe-area-inset-top);
   padding-bottom: env(safe-area-inset-bottom);
   padding-right: env(safe-area-inset-right);
+  pointer-events: none;
 }
 .quiz-drawer.is-open .quiz-drawer-panel {
   transform: translateX(0);
+  pointer-events: auto;
 }
 
 .quiz-drawer-bar {

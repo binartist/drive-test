@@ -300,14 +300,10 @@
     }
   }
 
-  function setGuideInert(on) {
-    // Keep the side table of contents usable; only dim the reading pane.
+  function clearGuideLocks() {
+    document.body.classList.remove("quiz-drawer-open");
     const main = document.getElementById("main");
-    if (!main) return;
-    if (on) {
-      main.setAttribute("inert", "");
-      main.setAttribute("aria-hidden", "true");
-    } else {
+    if (main) {
       main.removeAttribute("inert");
       main.removeAttribute("aria-hidden");
     }
@@ -320,22 +316,16 @@
     void els.session.offsetWidth;
     els.session.classList.add("is-open");
     document.body.classList.add("quiz-drawer-open");
-    setGuideInert(true);
   }
 
   function closeSession() {
     if (!els.session) return;
     els.session.classList.remove("is-open");
-    document.body.classList.remove("quiz-drawer-open");
-    setGuideInert(false);
+    clearGuideLocks();
     setView("intro");
     showLastSummary();
-    // Wait for drawer slide-out, then hide
-    window.setTimeout(() => {
-      if (!els.session.classList.contains("is-open")) {
-        els.session.hidden = true;
-      }
-    }, 280);
+    // Hide immediately so an invisible layer cannot trap clicks
+    els.session.hidden = true;
   }
 
   /** Open the knowledge-check drawer (intro), not a page scroll target. */
@@ -633,6 +623,11 @@
   els.welcomeBackdrop?.addEventListener("click", skipWelcome);
   els.drawerBackdrop?.addEventListener("click", requestExitSession);
 
+  clearGuideLocks();
+  if (els.session) {
+    els.session.classList.remove("is-open");
+    els.session.hidden = true;
+  }
   showLastSummary();
   showWelcomePrompt();
 })();
