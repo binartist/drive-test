@@ -121,6 +121,26 @@ a:hover { text-decoration: underline; }
 .drawer-btn {
   flex-shrink: 0;
 }
+.nav-back {
+  flex-shrink: 0;
+}
+.nav-back[hidden] { display: none !important; }
+.back-icon {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+/* Secondary screens: push-pop chrome (back instead of menu) */
+body.is-secondary .nav-open {
+  display: none !important;
+}
+body.is-secondary .nav-back {
+  display: inline-flex !important;
+}
+body.is-secondary .toc-popover-wrap {
+  display: none !important;
+}
+
 .drawer-icon {
   display: flex;
   flex-direction: column;
@@ -818,6 +838,7 @@ h4 { margin: 0 0 0.4rem; font-size: 1rem; }
 @media (min-width: 981px) {
   .nav-open { display: none; }
   .nav-close { display: none; }
+  body.is-secondary .nav-back { display: inline-flex !important; }
   .shell {
     display: grid;
     grid-template-columns: var(--sidebar) minmax(0, 1fr);

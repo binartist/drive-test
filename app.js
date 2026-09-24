@@ -9,6 +9,8 @@
   const screens = [...document.querySelectorAll(".screen[data-screen]")];
   const screenLinks = [...document.querySelectorAll(".toc-link[data-screen]")];
   const SCREENS = ["guide", "checklist", "quiz", "settings"];
+  /** Drawer root screens — peer switch (replace). Everything else is secondary (push + back). */
+  const PRIMARY_SCREENS = ["guide", "checklist", "quiz"];
   const SCREEN_TITLES = {
     guide: "Guide",
     checklist: "Checklist",
@@ -16,7 +18,33 @@
     settings: "Settings",
   };
   const screenTitle = document.getElementById("screenTitle");
+  const navBack = document.getElementById("navBack");
   let currentScreen = "guide";
+  /** Last primary screen under a pushed secondary (for Back when history cannot pop). */
+  let stackBase = "guide";
+  let secondaryPushed = false;
+
+  function isSecondary(name) {
+    return SCREENS.includes(name) && !PRIMARY_SCREENS.includes(name);
+  }
+
+  function syncNavChrome(name) {
+    const secondary = isSecondary(name);
+    document.body.classList.toggle("is-secondary", secondary);
+    if (navOpen) {
+      if (secondary) {
+        navOpen.setAttribute("hidden", "");
+        navOpen.setAttribute("aria-expanded", "false");
+      } else {
+        navOpen.removeAttribute("hidden");
+      }
+    }
+    if (navBack) {
+      if (secondary) navBack.removeAttribute("hidden");
+      else navBack.setAttribute("hidden", "");
+    }
+    if (secondary) closeNav();
+  }
 
   // Theme (Settings screen)
   const themeStatus = document.getElementById("themeStatus");
@@ -59,8 +87,17 @@
   const navClose = document.getElementById("navClose");
   backdrop?.addEventListener("click", closeNav);
   navClose?.addEventListener("click", closeNav);
+  navBack?.addEventListener("click", () => {
+    popSecondary();
+  });
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeNav();
+    if (e.key === "Escape") {
+      if (isSecondary(currentScreen)) {
+        popSecondary();
+        return;
+      }
+      closeNav();
+    }
   });
 
   // —— Screen routing (#/guide, #/tips, …) ——
@@ -77,6 +114,10 @@
   function showScreen(name, { scrollTop = true } = {}) {
     if (!SCREENS.includes(name)) name = "guide";
     currentScreen = name;
+    if (!isSecondary(name)) {
+      stackBase = name;
+      secondaryPushed = false;
+    }
     screens.forEach((el) => {
       const on = el.dataset.screen === name;
       el.classList.toggle("is-active", on);
@@ -90,21 +131,48 @@
     if (screenTitle) {
       screenTitle.textContent = SCREEN_TITLES[name] || "Guide";
     }
+    syncNavChrome(name);
     if (progressWrap) {
       progressWrap.hidden = name !== "guide";
     }
     if (name !== "guide" && progressBar) progressBar.style.width = "0%";
     if (scrollTop) window.scrollTo({ top: 0, behavior: "auto" });
     updateProgress();
-    // syncTocButton defined later; called from onHashChange end and after TOC setup
     document.dispatchEvent(new CustomEvent("nz-screen-change", { detail: { screen: name } }));
   }
 
   function goScreen(name, { replace = false, scrollTop = true } = {}) {
+    if (!SCREENS.includes(name)) name = "guide";
     const hash = "#/" + name;
-    if (replace) history.replaceState(null, "", hash);
-    else if (location.hash !== hash) location.hash = hash;
-    else showScreen(name, { scrollTop });
+    const toSecondary = isSecondary(name);
+    const fromSecondary = isSecondary(currentScreen);
+    // Roots replace each other; secondary is pushed onto the current root.
+    const shouldReplace =
+      replace ||
+      !toSecondary ||
+      (fromSecondary && toSecondary);
+
+    if (toSecondary && !fromSecondary && !shouldReplace) {
+      secondaryPushed = true;
+    }
+
+    if (shouldReplace) {
+      if (location.hash !== hash) history.replaceState(null, "", hash);
+      showScreen(name, { scrollTop });
+    } else if (location.hash !== hash) {
+      location.hash = hash;
+    } else {
+      showScreen(name, { scrollTop });
+    }
+  }
+
+  function popSecondary() {
+    if (secondaryPushed && isSecondary(currentScreen)) {
+      secondaryPushed = false;
+      history.back();
+      return;
+    }
+    goScreen(stackBase || "guide", { replace: true, scrollTop: true });
   }
 
   function onHashChange() {
