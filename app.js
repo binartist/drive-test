@@ -9,6 +9,15 @@
   const screens = [...document.querySelectorAll(".screen[data-screen]")];
   const screenLinks = [...document.querySelectorAll(".toc-link[data-screen]")];
   const SCREENS = ["guide", "tips", "playlist", "checklist", "quiz", "settings"];
+  const SCREEN_TITLES = {
+    guide: "Guide",
+    tips: "Tips",
+    playlist: "Playlist",
+    checklist: "Checklist",
+    quiz: "Knowledge check",
+    settings: "Settings",
+  };
+  const screenTitle = document.getElementById("screenTitle");
   let currentScreen = "guide";
 
   // Theme (Settings screen)
@@ -80,6 +89,9 @@
       link.classList.toggle("is-active", link.dataset.screen === name);
       link.classList.toggle("active", link.dataset.screen === name);
     });
+    if (screenTitle) {
+      screenTitle.textContent = SCREEN_TITLES[name] || "Guide";
+    }
     if (progressWrap) {
       progressWrap.hidden = name !== "guide";
     }
