@@ -301,18 +301,16 @@
   }
 
   function setGuideInert(on) {
-    const root = document.querySelector(".shell");
-    const top = document.querySelector(".topbar");
-    [root, top].forEach((node) => {
-      if (!node) return;
-      if (on) {
-        node.setAttribute("inert", "");
-        node.setAttribute("aria-hidden", "true");
-      } else {
-        node.removeAttribute("inert");
-        node.removeAttribute("aria-hidden");
-      }
-    });
+    // Keep the side table of contents usable; only dim the reading pane.
+    const main = document.getElementById("main");
+    if (!main) return;
+    if (on) {
+      main.setAttribute("inert", "");
+      main.setAttribute("aria-hidden", "true");
+    } else {
+      main.removeAttribute("inert");
+      main.removeAttribute("aria-hidden");
+    }
   }
 
   function openSession() {
@@ -602,9 +600,14 @@
   document.querySelectorAll("[data-quiz-open]").forEach((el) => {
     el.addEventListener("click", (e) => {
       e.preventDefault();
-      // close mobile nav if open
       document.getElementById("backdrop")?.click();
       openQuizHub();
+    });
+  });
+  // Chapter TOC stays on screen: choosing a section closes the drawer and scrolls the guide
+  document.querySelectorAll(".toc-link[href^='#']").forEach((el) => {
+    el.addEventListener("click", () => {
+      if (els.session && !els.session.hidden) closeSession();
     });
   });
   els.next.addEventListener("click", goNext);
