@@ -7,7 +7,7 @@
   <meta name="description" content="A calm, image-rich guide to driving, parking, and filling petrol in New Zealand." />
   <meta name="theme-color" content="#0f6e56" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <link rel="stylesheet" href="styles.css?v=20260925d" />
+  <link rel="stylesheet" href="styles.css?v=20260925e" />
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -31,22 +31,16 @@
   </header>
 
   <div class="shell">
-    <aside class="sidebar" id="sidebar" aria-label="Chapters">
+    <aside class="sidebar" id="sidebar" aria-label="Screens">
       <div class="sidebar-head">
-        <p class="sidebar-label">Chapters</p>
+        <p class="sidebar-label">Screens</p>
         <button type="button" class="ghost-btn nav-close" id="navClose" aria-label="Close menu">Close</button>
       </div>
-      <nav class="toc" aria-label="Guide sections">
-        <a href="#start" class="toc-link" data-section="start">Start here</a>
-        <a href="#drive" class="toc-link" data-section="drive">1. Drive on the left</a>
-        <a href="#roundabouts" class="toc-link" data-section="roundabouts">2. Roundabouts</a>
-        <a href="#give-way" class="toc-link" data-section="give-way">3. Who gives way</a>
-        <a href="#signs" class="toc-link" data-section="signs">4. Sign reading</a>
-        <a href="#parking" class="toc-link" data-section="parking">5. Parking</a>
-        <a href="#petrol" class="toc-link" data-section="petrol">6. Filling petrol</a>
-        <a href="#tips" class="toc-link" data-section="tips">Practical tips</a>
-        <a href="#playlist" class="toc-link" data-section="playlist">Video playlist</a>
-        <a href="#checklist" class="toc-link" data-section="checklist">Trip checklist</a>
+      <nav class="toc" aria-label="App screens">
+        <a href="#/guide" class="toc-link is-active" data-screen="guide">Guide</a>
+        <a href="#/tips" class="toc-link" data-screen="tips">Tips</a>
+        <a href="#/playlist" class="toc-link" data-screen="playlist">Playlist</a>
+        <a href="#/checklist" class="toc-link" data-screen="checklist">Checklist</a>
       </nav>
       <div class="sidebar-tools" aria-label="App">
         <p class="sidebar-tools-label">App</p>
@@ -63,6 +57,24 @@
     <div class="backdrop" id="backdrop" hidden></div>
 
     <main id="main" class="main">
+      <div class="screen is-active" id="screen-guide" data-screen="guide">
+
+      <div class="guide-toc" id="guideToc">
+        <button type="button" class="guide-toc-toggle" id="guideTocToggle" aria-expanded="true" aria-controls="guideTocPanel">
+          <span class="guide-toc-toggle-label">Contents</span>
+          <span class="guide-toc-chevron" aria-hidden="true"></span>
+        </button>
+        <nav class="guide-toc-panel" id="guideTocPanel" aria-label="Guide chapters">
+          <a href="#start" class="guide-toc-link">Start here</a>
+          <a href="#drive" class="guide-toc-link">1. Drive on the left</a>
+          <a href="#roundabouts" class="guide-toc-link">2. Roundabouts</a>
+          <a href="#give-way" class="guide-toc-link">3. Who gives way</a>
+          <a href="#signs" class="guide-toc-link">4. Sign reading</a>
+          <a href="#parking" class="guide-toc-link">5. Parking</a>
+          <a href="#petrol" class="guide-toc-link">6. Filling petrol</a>
+        </nav>
+      </div>
+
       <section class="hero" id="start">
         <p class="eyebrow">Calm · visual · trip-ready</p>
         <h2>Drive, park, and fill up like a local</h2>
@@ -628,8 +640,9 @@
           </div>
         </div>
       </section>
+      </div>
 
-      
+      <div class="screen" id="screen-tips" data-screen="tips" hidden>
       <!-- PRACTICAL TIPS -->
       <section class="chapter" id="tips" data-chapter="tips">
         <header class="chapter-head">
@@ -665,7 +678,9 @@
           </article>
         </div>
       </section>
+      </div>
 
+      <div class="screen" id="screen-playlist" data-screen="playlist" hidden>
       <!-- PLAYLIST -->
       <section class="chapter" id="playlist" data-chapter="playlist">
         <header class="chapter-head">
@@ -708,9 +723,9 @@
           </article>
         </div>
       </section>
+      </div>
 
-
-
+      <div class="screen" id="screen-checklist" data-screen="checklist" hidden>
       <!-- CHECKLIST -->
       <section class="chapter" id="checklist" data-chapter="checklist">
         <header class="chapter-head">
@@ -738,9 +753,10 @@
 
       <footer class="site-footer">
         <p>NZ Driving Guide · made for your North Island trip</p>
-        <a href="#start">Back to top</a>
+        <a href="#/guide" data-screen="guide">Back to top</a>
       </footer>
-    </main>
+      </div>
+</main>
   </div>
 
   
@@ -824,7 +840,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260925d"></script>
-  <script src="quiz.js?v=20260925d"></script>
+  <script src="app.js?v=20260925e"></script>
+  <script src="quiz.js?v=20260925e"></script>
 </body>
 </html>

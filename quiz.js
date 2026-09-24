@@ -594,8 +594,8 @@
       openQuizHub();
     });
   });
-  // Chapter TOC stays on screen: choosing a section closes the drawer and scrolls the guide
-  document.querySelectorAll(".toc-link[href^='#']").forEach((el) => {
+  // Screen nav / guide TOC: leaving reading flow closes the quiz drawer
+  document.querySelectorAll(".toc-link[data-screen], .guide-toc-link").forEach((el) => {
     el.addEventListener("click", () => {
       if (els.session && !els.session.hidden) closeSession();
     });
