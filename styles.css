@@ -993,3 +993,20 @@ body.quiz-welcome-open { overflow: hidden; }
     flex: 1;
   }
 }
+
+.tip-cards {
+  margin-top: 0.75rem;
+}
+.tip-cards .info-card .text-link {
+  margin-top: 0.65rem;
+}
+@media (min-width: 720px) {
+  .tip-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 981px) {
+  .tip-cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
