@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>NZ Driving Guide — North Island Newcomer</title>
+  <meta name="description" content="A calm, image-rich guide to driving, parking, and filling petrol in New Zealand." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">NZ</span>
+        <div>
+          <p class="brand-kicker">North Island · Newcomer</p>
+          <h1 class="brand-title">Driving Guide</h1>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <button type="button" class="ghost-btn" id="themeToggle" aria-label="Toggle dark mode">Theme</button>
+        <button type="button" class="ghost-btn nav-open" id="navOpen" aria-controls="sidebar" aria-expanded="false">Menu</button>
+      </div>
+    </div>
+    <div class="progress" aria-hidden="true"><div class="progress-bar" id="progressBar"></div></div>
+  </header>
+
+  <div class="shell">
+    <aside class="sidebar" id="sidebar" aria-label="Chapters">
+      <p class="sidebar-label">Chapters</p>
+      <nav class="toc">
+        <a href="#start" class="toc-link" data-section="start">Start here</a>
+        <a href="#drive" class="toc-link" data-section="drive">1. Drive on the left</a>
+        <a href="#roundabouts" class="toc-link" data-section="roundabouts">2. Roundabouts</a>
+        <a href="#give-way" class="toc-link" data-section="give-way">3. Who gives way</a>
+        <a href="#parking" class="toc-link" data-section="parking">4. Parking</a>
+        <a href="#petrol" class="toc-link" data-section="petrol">5. Filling petrol</a>
+        <a href="#playlist" class="toc-link" data-section="playlist">Video playlist</a>
+        <a href="#checklist" class="toc-link" data-section="checklist">Trip checklist</a>
+      </nav>
+      <div class="sidebar-card">
+        <p class="sidebar-card-title">Watch first</p>
+        <p class="sidebar-card-text">10 minutes with NZ Police before you pick up the keys.</p>
+        <a class="text-link" href="https://www.youtube.com/watch?v=TircMu9yTa4" target="_blank" rel="noopener">Driving in New Zealand ↗</a>
+      </div>
+    </aside>
+
+    <div class="backdrop" id="backdrop" hidden></div>
+
+    <main id="main" class="main">
+      <section class="hero" id="start">
+        <p class="eyebrow">Calm · visual · trip-ready</p>
+        <h2>Drive, park, and fill up like a local</h2>
+        <p class="lede">A reading-friendly guide for your first week on North Island roads. Short chapters, real NZ photos, clear diagrams, and curated videos.</p>
+        <div class="hero-actions">
+          <a class="primary-btn" href="#drive">Start chapter 1</a>
+          <a class="secondary-btn" href="#playlist">Jump to videos</a>
+        </div>
+        <ul class="stat-row">
+          <li><strong>5</strong><span>chapters</span></li>
+          <li><strong>~25 min</strong><span>video watchlist</span></li>
+          <li><strong>Left</strong><span>side of the road</span></li>
+        </ul>
+      </section>
+
+      <!-- DRIVE -->
+      <section class="chapter" id="drive" data-chapter="1">
+        <header class="chapter-head">
+          <p class="chapter-num">Chapter 1</p>
+          <h2>Drive on the left</h2>
+          <p class="chapter-summary">Sit on the right, keep left, think in km/h, and leave extra time on winding roads.</p>
+        </header>
+
+        <figure class="photo-block">
+          <img src="assets/photo-motorway-north.jpg" alt="Auckland Northern Motorway with left-side traffic" loading="lazy" />
+          <figcaption>Auckland Northern Motorway — traffic keeps left; speeds are in km/h.</figcaption>
+        </figure>
+
+        <div class="callout tip">
+          <strong>Remember</strong>
+          <p>Drive on the left. Keep left except when overtaking. A red light means stop — there is no free turn on red in New Zealand.</p>
+        </div>
+
+        <div class="two-col">
+          <div>
+            <h3>Do this every time</h3>
+            <ul class="check-list">
+              <li>Sit on the right-hand side of the car</li>
+              <li>Keep left unless overtaking or turning right</li>
+              <li>Read speed signs in <em>kilometres per hour</em></li>
+              <li>Seatbelts for everyone; phone must be hands-free</li>
+              <li>Slow early for bends, crests, and gravel</li>
+            </ul>
+          </div>
+          <figure class="diagram">
+            <img src="assets/diagram-drive-left.png" alt="Diagram explaining drive on the left and sit on the right" loading="lazy" />
+          </figure>
+        </div>
+
+        <div class="gallery">
+          <figure>
+            <img src="assets/photo-highway-coast.jpg" alt="Winding coastal state highway in New Zealand" loading="lazy" />
+            <figcaption>Coastal highway — slow for bends.</figcaption>
+          </figure>
+          <figure>
+            <img src="assets/photo-one-lane-bridge.jpg" alt="Single-lane bridge in New Zealand" loading="lazy" />
+            <figcaption>One-lane bridge — follow the priority sign.</figcaption>
+          </figure>
+        </div>
+
+        <div class="video-card">
+          <div class="video-meta">
+            <p class="video-label">Watch</p>
+            <h3>Driving in New Zealand</h3>
+            <p>NZ Police overview: left side, no turn on red, winding roads, and planning travel time.</p>
+            <a class="text-link" href="https://www.youtube.com/watch?v=TircMu9yTa4" target="_blank" rel="noopener">Open on YouTube ↗</a>
+          </div>
+          <div class="video-frame">
+            <iframe title="Driving in New Zealand" src="https://www.youtube-nocookie.com/embed/TircMu9yTa4" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+          </div>
+        </div>
+      </section>
+
+      <!-- ROUNDABOUTS -->
+      <section class="chapter" id="roundabouts" data-chapter="2">
+        <header class="chapter-head">
+          <p class="chapter-num">Chapter 2</p>
+          <h2>Roundabouts</h2>
+          <p class="chapter-summary">Give way to traffic from your right, travel clockwise, and always signal left to exit.</p>
+        </header>
+
+        <figure class="photo-block">
+          <img src="assets/photo-roundabout.jpg" alt="Town roundabout in Blenheim, New Zealand" loading="lazy" />
+          <figcaption>Town roundabout (Blenheim) — approach slowly and give way from the right.</figcaption>
+        </figure>
+
+        <figure class="diagram wide">
+          <img src="assets/diagram-roundabout.png" alt="Diagram of NZ roundabout give-way and exit signalling" loading="lazy" />
+        </figure>
+
+        <h3>Signals that work in NZ</h3>
+        <div class="cards">
+          <article class="info-card">
+            <h4>First exit (left)</h4>
+            <p>Indicate left on approach, then left again as you exit.</p>
+          </article>
+          <article class="info-card">
+            <h4>Straight through</h4>
+            <p>No signal on approach. Indicate left after you pass the exit before yours.</p>
+          </article>
+          <article class="info-card">
+            <h4>Right / more than halfway</h4>
+            <p>Indicate right on approach, then left to leave.</p>
+          </article>
+        </div>
+
+        <div class="video-card">
+          <div class="video-meta">
+            <p class="video-label">Watch</p>
+            <h3>Signalling at Roundabouts</h3>
+            <p>Clear walkthrough of the two signals: approach, then left to leave.</p>
+            <a class="text-link" href="https://www.youtube.com/watch?v=8mWqGUJY_Nk" target="_blank" rel="noopener">Open on YouTube ↗</a>
+          </div>
+          <div class="video-frame">
+            <iframe title="Signalling at Roundabouts" src="https://www.youtube-nocookie.com/embed/8mWqGUJY_Nk" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+          </div>
+        </div>
+
+        <p class="refs">Official reading: <a href="https://nzta.govt.nz/roadcode/general-road-code/about-driving/giving-way/giving-way-at-roundabouts" target="_blank" rel="noopener">Waka Kotahi roundabouts</a> · <a href="https://www.nzta.govt.nz/assets/resources/know-your-way-around-roundabouts/docs/know-your-way-around-roundabouts.pdf" target="_blank" rel="noopener">PDF guide</a></p>
+      </section>
+
+      <!-- GIVE WAY -->
+      <section class="chapter" id="give-way" data-chapter="3">
+        <header class="chapter-head">
+          <p class="chapter-num">Chapter 3</p>
+          <h2>Who gives way</h2>
+          <p class="chapter-summary">Uncontrolled intersections and T-junctions are where visitors get caught out.</p>
+        </header>
+
+        <figure class="diagram wide">
+          <img src="assets/diagram-give-way.png" alt="Diagram of NZ give-way rules at crossroads and T-intersections" loading="lazy" />
+        </figure>
+
+        <div class="cards">
+          <article class="info-card">
+            <h4>Uncontrolled crossroads</h4>
+            <p>Give way to traffic coming from your right.</p>
+          </article>
+          <article class="info-card">
+            <h4>T-intersection</h4>
+            <p>If your road ends, you give way to the through road.</p>
+          </article>
+          <article class="info-card warn">
+            <h4>No turn on red</h4>
+            <p>A red light means stop. Wait for green (or a green arrow).</p>
+          </article>
+        </div>
+
+        <p class="refs">Official reading: <a href="https://nzta.govt.nz/roadcode/general-road-code/about-driving/giving-way/the-give-way-rules" target="_blank" rel="noopener">The give way rules</a></p>
+      </section>
+
+      <!-- PARKING -->
+      <section class="chapter" id="parking" data-chapter="4">
+        <header class="chapter-head">
+          <p class="chapter-num">Chapter 4</p>
+          <h2>Parking</h2>
+          <p class="chapter-summary">Yellow lines mean different things. Always read the pole sign.</p>
+        </header>
+
+        <div class="callout warn">
+          <strong>Yellow lines (NZ)</strong>
+          <p><em>Solid yellow</em> = no stopping (not even briefly). <em>Broken yellow</em> = no parking (brief passenger drop-off only if you stay with the car).</p>
+        </div>
+
+        <figure class="diagram wide">
+          <img src="assets/diagram-parking.png" alt="Diagram of NZ solid and broken yellow kerb line rules" loading="lazy" />
+        </figure>
+
+        <ul class="check-list">
+          <li>Read the pole sign for zone, time limit, and fees</li>
+          <li>Never block driveways or bus stops</li>
+          <li>In Auckland paid areas: pay by plate at the machine or use the AT Park app</li>
+        </ul>
+
+        <div class="video-card">
+          <div class="video-meta">
+            <p class="video-label">Watch</p>
+            <h3>Unbroken yellow kerb lines</h3>
+            <p>Short clip on what solid yellow means at the kerb.</p>
+            <a class="text-link" href="https://www.youtube.com/watch?v=yzwuDcDv0_4" target="_blank" rel="noopener">Open on YouTube ↗</a>
+          </div>
+          <div class="video-frame">
+            <iframe title="Unbroken yellow kerb lines" src="https://www.youtube-nocookie.com/embed/yzwuDcDv0_4" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+          </div>
+        </div>
+
+        <p class="refs">More: <a href="https://at.govt.nz/infringements-fines/how-to-not-get-a-fine" target="_blank" rel="noopener">AT — How to not get a fine</a> · <a href="https://at.govt.nz/driving-and-parking/paying-for-parking" target="_blank" rel="noopener">Ways to pay (Auckland)</a></p>
+      </section>
+
+      <!-- PETROL -->
+      <section class="chapter" id="petrol" data-chapter="5">
+        <header class="chapter-head">
+          <p class="chapter-num">Chapter 5</p>
+          <h2>Filling petrol</h2>
+          <p class="chapter-summary">It’s called petrol here. Most rentals take 91. Match the flap sticker.</p>
+        </header>
+
+        <div class="gallery">
+          <figure>
+            <img src="assets/photo-petrol-bp.jpg" alt="BP petrol station in Lower Hutt, New Zealand" loading="lazy" />
+            <figcaption>City station (BP, Lower Hutt).</figcaption>
+          </figure>
+          <figure>
+            <img src="assets/photo-petrol-town.jpg" alt="Small-town petrol station in New Zealand" loading="lazy" />
+            <figcaption>Small-town pump — often self-serve.</figcaption>
+          </figure>
+        </div>
+
+        <figure class="diagram wide">
+          <img src="assets/diagram-petrol.png" alt="Step diagram for filling petrol in New Zealand" loading="lazy" />
+        </figure>
+
+        <ol class="steps">
+          <li>Park with the flap toward the pump and switch the engine off</li>
+          <li>Check the flap sticker: usually <strong>91</strong>, sometimes 95/98, or diesel</li>
+          <li>Lift the matching nozzle, insert fully, squeeze — it auto-stops when full</li>
+          <li>Hang the nozzle up and close the flap</li>
+          <li>Pay at the pump or inside (remember your pump number). Some night sites ask you to prepay first</li>
+        </ol>
+
+        <div class="callout warn">
+          <strong>Never mix fuels</strong>
+          <p>Petrol in a diesel car (or the reverse) can wreck the engine. If unsure, ask staff before you lift a nozzle.</p>
+        </div>
+
+        <div class="video-card">
+          <div class="video-meta">
+            <p class="video-label">Watch</p>
+            <h3>How to fill up with petrol</h3>
+            <p>Physical pump steps (filmed in the UK). In NZ, ignore E5/E10 labels and use <strong>91 / 95 / 98</strong> or diesel.</p>
+            <a class="text-link" href="https://www.youtube.com/watch?v=obQ_1ySuLnc" target="_blank" rel="noopener">Open on YouTube ↗</a>
+          </div>
+          <div class="video-frame">
+            <iframe title="How to fill up with petrol" src="https://www.youtube-nocookie.com/embed/obQ_1ySuLnc" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+          </div>
+        </div>
+      </section>
+
+      <!-- PLAYLIST -->
+      <section class="chapter" id="playlist" data-chapter="playlist">
+        <header class="chapter-head">
+          <p class="chapter-num">Playlist</p>
+          <h2>Suggested watch order</h2>
+          <p class="chapter-summary">About 20–25 minutes total. Tick them off as you go.</p>
+        </header>
+
+        <ol class="playlist">
+          <li>
+            <a href="https://www.youtube.com/watch?v=TircMu9yTa4" target="_blank" rel="noopener">Driving in New Zealand</a>
+            <span>Overview · NZ Police</span>
+          </li>
+          <li>
+            <a href="https://www.youtube.com/watch?v=8mWqGUJY_Nk" target="_blank" rel="noopener">Signalling at Roundabouts</a>
+            <span>Roundabout signals</span>
+          </li>
+          <li>
+            <a href="https://www.youtube.com/watch?v=yzwuDcDv0_4" target="_blank" rel="noopener">Unbroken yellow kerb lines</a>
+            <span>Parking · yellow lines</span>
+          </li>
+          <li>
+            <a href="https://www.youtube.com/watch?v=obQ_1ySuLnc" target="_blank" rel="noopener">How to fill up with petrol</a>
+            <span>Pump technique · use NZ grades</span>
+          </li>
+          <li>
+            <a href="https://drive.govt.nz/teach-someone-to-drive/video-library" target="_blank" rel="noopener">Drive.govt.nz video library</a>
+            <span>Optional deeper practice</span>
+          </li>
+        </ol>
+
+        <div class="cards">
+          <article class="info-card">
+            <h4>Official visitor hub</h4>
+            <p><a href="https://nzta.govt.nz/safety/visiting-new-zealand" target="_blank" rel="noopener">Visiting New Zealand — Waka Kotahi</a></p>
+          </article>
+          <article class="info-card">
+            <h4>Printable booklet</h4>
+            <p><a href="https://www.nzta.govt.nz/assets/resources/driving-in-nz/docs/driving-in-nz-english.pdf" target="_blank" rel="noopener">Driving in New Zealand (PDF)</a></p>
+          </article>
+        </div>
+      </section>
+
+      <!-- CHECKLIST -->
+      <section class="chapter" id="checklist" data-chapter="checklist">
+        <header class="chapter-head">
+          <p class="chapter-num">Before you go</p>
+          <h2>Trip checklist</h2>
+          <p class="chapter-summary">Tap to tick. Progress saves on this device.</p>
+        </header>
+
+        <ul class="todo" id="todoList">
+          <li><label><input type="checkbox" data-key="licence" /> Valid licence (English translation or IDP if needed)</label></li>
+          <li><label><input type="checkbox" data-key="left" /> Practised “keep left” mentally at intersections</label></li>
+          <li><label><input type="checkbox" data-key="roundabout" /> Watched roundabout signalling video</label></li>
+          <li><label><input type="checkbox" data-key="yellow" /> Know solid vs broken yellow lines</label></li>
+          <li><label><input type="checkbox" data-key="atpark" /> If Auckland: AT Park app installed</label></li>
+          <li><label><input type="checkbox" data-key="fuel" /> Know rental fuel type (usually 91)</label></li>
+          <li><label><input type="checkbox" data-key="full" /> Plan to return the car full if required</label></li>
+        </ul>
+
+        <p class="footnote">Photos: Wikimedia Commons (NZ roads, roundabout, bridges, stations). Rules summarised from Waka Kotahi / Auckland Transport public guidance. This app is a study aid — always follow current road signs and the official Road Code.</p>
+      </section>
+
+      <footer class="site-footer">
+        <p>NZ Driving Guide · made for your North Island trip</p>
+        <a href="#start">Back to top</a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
